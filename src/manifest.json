@@ -7,6 +7,16 @@
   "background": {
     "service_worker": "background.bundle.js"
   },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "injected.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon-34.png"
@@ -19,7 +29,8 @@
   },
   "permissions": [
     "scripting",
-    "storage"
+    "storage",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -35,8 +46,7 @@
       "css": [
         "content.styles.css"
       ],
-      "run_at": "document_start",
-      "world": "MAIN"
+      "run_at": "document_start"
     }
   ]
 }
