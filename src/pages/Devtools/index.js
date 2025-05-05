@@ -41,51 +41,28 @@ chrome.devtools.panels.create(
       }
     });
 
-    /*
-        chrome.devtools.inspectedWindow.eval("window.location.href", (url, err) => {
-          chrome.runtime.sendMessage({
-            target: "content-script",
-            from: "devtools",
-            data: "Hello from DevTools!",
-            tabId: chrome.devtools.inspectedWindow.tabId
-          });
-    
-          chrome.runtime.sendMessage({
-            target: "background",
-            from: 'devtools',
-            data: 'input message title from devtools',
-            tabId: window.chrome.devtools.inspectedWindow.tabId // Specify the target tab
-          }, function (response) {
-            if (response) {
-              console.log('Response from background:', response.status);
-            }
-          });
-    
-        });
-    
-    
-        chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    
-          if (msg.from === "content-script") {
-            console.log("Reply from content script:", msg.data);
-            alert("Reply from content script: " + msg.data);
-          }
-    
-          //  console.log('Received message in panel:', msg); // Log the entire request
-          if (msg.from === 'background') {
-            alert('It IS from background!'); // This should log if the condition is met
-          } else {
-            alert('It is NOT from background:', msg.from); // See what the 'from' value actually is
-          }
-    
-          if (sender.tab && sender.tab.id === chrome.devtools.inspectedWindow.tabId) {
-            if (msg.from === 'background') {
-              alert("message from background: " + msg.data)
-            }
-          }
-    
-        });
-    */
+    chrome.devtools.inspectedWindow.eval("window.location.href", (url, err) => {
+      chrome.runtime.sendMessage({
+        target: "content-script",
+        from: "devtools",
+        data: "Hello from DevTools!",
+        tabId: chrome.devtools.inspectedWindow.tabId
+      });
+
+    });
+
+
+    chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+
+      console.log("msg.from " + msg.from);
+      if (msg.from === "content-script") {
+
+        console.log("Reply from content script:", msg.data);
+        alert("Reply from content script: " + msg.data);
+
+      }
+    });
+
 
   });
 

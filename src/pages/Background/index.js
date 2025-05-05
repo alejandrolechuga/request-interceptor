@@ -3,36 +3,21 @@ console.log('Put the background scripts here.');
 
 
 
-//chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-
-// console.log("send data to ", message.target + " ", message.tabId + " : ", message);
-/* if (message.target === "content-script") {
-     console.log(" content-script  message ---------> ", message);
-     chrome.tabs.sendMessage(message.tabId, message);
- }
- 
- if (message.target === "devtools") {
-     console.log(" devtools  message ---------> ", message);
-     chrome.runtime.sendMessage(message);
- }
- 
- if (message.from === 'devtools' && message.tabId) {
-     console.log(`Background received from DevTools (Tab ${message.tabId}):`, message);
-     // Send a response back to the DevTools panel
-     sendResponse({ status: 'Message received by background' });
-     console.log("sent msg from back to devtools");
- }
- */
-/*  chrome.tabs.sendMessage(tabId, message, (response) => {
-      if (chrome.runtime.lastError) {
-          console.error("Error sending message to tab " + tabId + ":", chrome.runtime.lastError);
-      } else {
-          console.log("Response from content script (tab " + tabId + "):", response);
-      }
-  }); */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log("message.target " + message.target);
+    if (message.target === "content-script") {
+        console.log(message.tabId + " : ", message);
+        chrome.tabs.sendMessage(message.tabId, message);
 
 
-//});
+    } else if (message.target === "devtools") {
+        console.log(message.tabId + " : ", message);
+        chrome.runtime.sendMessage(message);
+
+    }
+});
+
+
 
 
 let devToolsPort = null;
