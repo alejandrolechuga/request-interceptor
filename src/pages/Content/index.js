@@ -48,11 +48,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         });
     }
 
-    if (msg.type === "statusUpdate") {
-        console.log("[Content Script Received Broadcast]", msg.status, msg.timestamp, sender);
-        // Update UI based on the status update
-    }
-
 
 });
 
