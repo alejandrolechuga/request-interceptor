@@ -21,8 +21,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 
 let devToolsPort = null;
+const contentPorts = {}; // Keep track of connected content script ports
 
 chrome.runtime.onConnect.addListener((port) => {
+
     if (port.name === "devtools-panel") {
         devToolsPort = port;
         console.log("Background script connected to DevTools panel");
@@ -60,7 +62,34 @@ chrome.runtime.onConnect.addListener((port) => {
                 devToolsPort.postMessage({ action: "background-to-panel", data: backgroundData });
             }
 
-
         }, 3000);
+
+    } else if (port.name === "content-to-background") {
+        const tabId = port.sender.tab?.id;
+        if (tabId) {
+            console.log(`Background connected to content script in tab ${tabId}`);
+            contentPorts[tabId] = port;
+
+            port.onMessage.addListener((message) => {
+
+                // Process messages from the content script
+                if (message.action === "pageLoaded") {
+                    console.log(`[Background Received from Content Tab ${tabId}]`, message);
+                    port.postMessage({ action: "backgroundData", payload: { initialValue: Math.random() } });
+                }
+            });
+
+            port.onDisconnect.addListener(() => {
+                console.log(`Background disconnected from content script in tab ${tabId}`);
+                delete contentPorts[tabId];
+            });
+
+        } else {
+            console.error("Content script connected without a tab ID");
+        }
     }
+
+
 });
+
+

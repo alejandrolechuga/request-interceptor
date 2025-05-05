@@ -51,3 +51,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 });
 
+// In your content.js
+
+const backgroundPort = chrome.runtime.connect({ name: "content-to-background" });
+
+backgroundPort.onMessage.addListener((message) => {
+    if (message.action === 'backgroundData')
+        console.log("[Content Script Received From Backgound]", message);
+
+});
+
+backgroundPort.onDisconnect.addListener(() => {
+    console.log("Content script disconnected from background");
+    // Handle disconnection if needed (e.g., try to reconnect)
+});
+
+const dataToSend = "data from content to back";
+backgroundPort.postMessage({ action: "pageLoaded", data: dataToSend });
+
+
