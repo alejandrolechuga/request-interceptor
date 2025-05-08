@@ -1,51 +1,35 @@
 import { printLine } from './modules/print';
 
-// This keeps track of the origal js HTTP request functions
-const originalFetch = window.fetch;
-window.fetch = async (...args) => {
-    printLine('fetch', args);
-    const response = await originalFetch(...args);
-    if (!response.body) {
-        console.log("Response has no body.");
-        return null;
-    }
-    console.log("response ", response);
-    // apply rule here
-    const hardcodedResponse = {
-        status: 200,
-        statusText: 'OK',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
-    // todo here add rule matching
-    return new Response(JSON.stringify({ test: "hola" }), hardcodedResponse);
-};
-
 // Inject into page (MAIN world)
+
+import injectedCode from '!!raw-loader!injected.bundle.js'; // or wherever
+
 const script = document.createElement('script');
-script.src = chrome.runtime.getURL('injected.js');
-script.onload = () => script.remove();
+script.textContent = injectedCode; // ✅ inline JS string
 (document.head || document.documentElement).appendChild(script);
+
+// const script = document.createElement('script');
+// script.src = chrome.runtime.getURL('injected.bundle.js');
+// script.onload = () => script.remove();
+// (document.head || document.documentElement).appendChild(script);
 
 console.log("chrome ", chrome.runtime);
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    if (msg.from === "devtools") {
-        console.log("Message from DevTools:", msg.data);
-        console.log("msg ", msg);
-        // Respond
-        chrome.runtime.sendMessage({
-            target: "devtools",
-            from: "content-script",
-            data: "Received your message!",
-            tabId: msg.tabId
-        }, (response) => {
-            // Optional: Handle the response from the background script
-            if (response) {
-                console.log('Background response:', response);
-            }
-        });
+window.addEventListener('message', function (event) {
+    // Filter out any messages not sent by our extension code
+    if (event.source !== window || !event.data || event.data.source !== 'devtools-response-overrider') return;
+
+    // Process messages coming from the injected script
+    if (event.data.from === 'injected' && event.data.type === 'init') {
+        console.log('[content script] Received message from injected script:', event.data.payload);
+
+        // Reply back to the injected script
+        window.postMessage({
+            source: 'devtools-response-overrider',
+            from: 'content-script',
+            type: 'response',
+            payload: 'Hello back from content script'
+        }, '*');
     }
 });
 

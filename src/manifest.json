@@ -10,7 +10,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "injected.js"
+        "injected.bundle.js"
       ],
       "matches": [
         "<all_urls>"

@@ -28,8 +28,8 @@ var compiler = webpack(config);
 var server = new WebpackDevServer(
   {
     https: {
-      key: fs.readFileSync(path.join(__dirname, 'certs/localhost.key')),
-      cert: fs.readFileSync(path.join(__dirname, 'certs/localhost.crt'))
+      key: fs.readFileSync(path.join(__dirname, 'certs/localhost+2-key.pem')),
+      cert: fs.readFileSync(path.join(__dirname, 'certs/localhost+2.pem'))
     },
     hot: true,
     liveReload: false,
