@@ -6,7 +6,7 @@
 3. Run `npm install` to install the dependencies.
 4. Run `npm start`
 5. Generate certificates. Check below how to generates certificates
-5. Load your extension on Chrome following:
+5. Load your extension on Chrome following:asdasdads
    1. Access `chrome://extensions/`
    2. Check `Developer mode`
    3. Click on `Load unpacked extension`
