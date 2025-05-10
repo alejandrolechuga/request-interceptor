@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        rum: npm run lint
+        run: npm run lint
 
       - name: type check
         run: npm run type-check
