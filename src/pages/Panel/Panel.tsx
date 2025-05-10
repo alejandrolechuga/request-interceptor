@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './Panel.css';
 import NetworkTable from '../../components/NetworkTable';
 

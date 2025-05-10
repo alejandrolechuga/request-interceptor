@@ -1,18 +1,24 @@
 // Do this as the first thing so that any code reading it knows the right env.
+import WebpackDevServer from 'webpack-dev-server';
+import webpack from 'webpack';
+import config from '../webpack.config';
+import env from './env';
+import path from 'path';
+import fs from 'fs';
+
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 process.env.ASSET_PATH = '/';
+// Define the type for chromeExtensionBoilerplate
+interface ChromeExtensionBoilerplateOptions {
+  notHotReload?: string[];
+}
 
-var WebpackDevServer = require('webpack-dev-server'),
-  webpack = require('webpack'),
-  config = require('../webpack.config'),
-  env = require('./env'),
-  path = require('path');
-const fs = require('fs');
-var options = config.chromeExtensionBoilerplate || {};
-var excludeEntriesToHotReload = options.notHotReload || [];
+const options: ChromeExtensionBoilerplateOptions =
+  config.chromeExtensionBoilerplate || {};
+const excludeEntriesToHotReload = options.notHotReload || [];
 
-for (var entryName in config.entry) {
+for (const entryName in config.entry) {
   if (excludeEntriesToHotReload.indexOf(entryName) === -1) {
     config.entry[entryName] = [
       'webpack/hot/dev-server',
@@ -23,9 +29,9 @@ for (var entryName in config.entry) {
 
 delete config.chromeExtensionBoilerplate;
 
-var compiler = webpack(config);
+const compiler = webpack(config);
 
-var server = new WebpackDevServer(
+const server = new WebpackDevServer(
   {
     https: {
       key: fs.readFileSync(path.join(__dirname, 'certs/localhost+2-key.pem')),

@@ -17,11 +17,13 @@
     "noEmit": false,
     "jsx": "react",
     "baseUrl": "./",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["jest", "@testing-library/jest-dom", "chrome"],
     "paths": {
       "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*", "src/types/assets.d.ts"],
+  "files": ["src/types/assets.d.ts", "src/types/zip-webpack-plugin.d.ts"],
   "exclude": ["build", "node_modules"]
 }

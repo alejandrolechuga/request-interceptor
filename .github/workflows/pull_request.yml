@@ -23,7 +23,10 @@ jobs:
       
       - name: Install deps
         run: npm ci
-      
+
+      - name: Lint
+        rum: npm run lint
+
       - name: type check
         run: npm run type-check
 
