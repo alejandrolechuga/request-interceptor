@@ -1,22 +1,35 @@
-var webpack = require('webpack'),
-  path = require('path'),
-  fileSystem = require('fs-extra'),
-  env = require('./utils/env'),
-  CopyWebpackPlugin = require('copy-webpack-plugin'),
-  HtmlWebpackPlugin = require('html-webpack-plugin'),
-  TerserPlugin = require('terser-webpack-plugin');
-var { CleanWebpackPlugin } = require('clean-webpack-plugin');
-var ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-var ReactRefreshTypeScript = require('react-refresh-typescript');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const ASSET_PATH = process.env.ASSET_PATH || '/';
+import webpack from 'webpack';
+import path from 'path';
+import fsExtra from 'fs-extra'; // Changed from fileSystem for clarity and convention
+// Assuming utils/env.js is now utils/env.ts and has a default export
+// e.g., export default { NODE_ENV: process.env.NODE_ENV || 'development' };
+import env from './utils/env';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import ReactRefreshTypeScript from 'react-refresh-typescript';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
-var alias = {};
+// Define an interface for your custom Webpack configuration properties
+interface MyWebpackConfiguration extends webpack.Configuration {
+  chromeExtensionBoilerplate?: {
+    notHotReload: string[];
+  };
+}
+
+const ASSET_PATH: string = process.env.ASSET_PATH || '/';
+
+const alias: Record<string, string> = {};
 
 // load the secrets
-var secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
+const secretsPath: string = path.join(
+  __dirname,
+  'secrets.' + env.NODE_ENV + '.js'
+);
 
-var fileExtensions = [
+const fileExtensions: string[] = [
   'jpg',
   'jpeg',
   'png',
@@ -29,14 +42,14 @@ var fileExtensions = [
   'woff2',
 ];
 
-if (fileSystem.existsSync(secretsPath)) {
+if (fsExtra.existsSync(secretsPath)) {
   alias['secrets'] = secretsPath;
 }
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isDevelopment: boolean = process.env.NODE_ENV !== 'production';
 
-var options = {
-  mode: process.env.NODE_ENV || 'development',
+const options: MyWebpackConfiguration = {
+  mode: isDevelopment ? 'development' : 'production',
   entry: {
     newtab: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.tsx'),
     options: path.join(__dirname, 'src', 'pages', 'Options', 'index.tsx'),
@@ -47,6 +60,7 @@ var options = {
     panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.tsx'),
   },
   chromeExtensionBoilerplate: {
+    // Your custom property
     notHotReload: ['background', 'contentScript', 'devtools'],
   },
   output: {
@@ -63,20 +77,16 @@ var options = {
         use: [
           {
             loader: 'babel-loader',
+            // Ensure you have @babel/preset-typescript if Babel is handling TS/TSX
+            // and that babel-loader options are correctly configured in babel.config.js
           },
         ],
       },
       {
-        // look for .css or .scss files
         test: /\.(css|scss)$/,
-        // in the `src` directory
         use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-          },
+          'style-loader',
+          'css-loader',
           {
             loader: 'sass-loader',
             options: {
@@ -86,13 +96,9 @@ var options = {
         ],
       },
       {
-        test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
+        test: new RegExp('\\.(' + fileExtensions.join('|') + ')$'),
         type: 'asset/resource',
         exclude: /node_modules/,
-        // loader: 'file-loader',
-        // options: {
-        //   name: '[name].[ext]',
-        // },
       },
       {
         test: /\.html$/,
@@ -104,12 +110,12 @@ var options = {
         exclude: /node_modules/,
         use: [
           {
-            loader: require.resolve('ts-loader'),
+            loader: 'ts-loader', // Using require.resolve is fine too
             options: {
               getCustomTransformers: () => ({
                 before: [isDevelopment && ReactRefreshTypeScript()].filter(
                   Boolean
-                ),
+                ) as webpack.CustomTransformerFactory[], // Added type assertion
               }),
               transpileOnly: isDevelopment,
             },
@@ -117,16 +123,14 @@ var options = {
         ],
       },
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx)$/, // This rule might conflict or be redundant if babel-loader above handles JS/JSX too
         use: [
+          'source-map-loader',
           {
-            loader: 'source-map-loader',
-          },
-          {
-            loader: require.resolve('babel-loader'),
+            loader: 'babel-loader', // Using require.resolve is fine
             options: {
               plugins: [
-                isDevelopment && require.resolve('react-refresh/babel'),
+                isDevelopment && 'react-refresh/babel', // Using require.resolve is fine
               ].filter(Boolean),
             },
           },
@@ -139,14 +143,13 @@ var options = {
     alias: alias,
     extensions: fileExtensions
       .map((extension) => '.' + extension)
-      .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
+      .concat(['.js', '.jsx', '.ts', '.tsx', '.css']), // .js, .jsx might be less needed if all source is TS
   },
   plugins: [
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new CleanWebpackPlugin({ verbose: false }),
-    new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(), // Good for type checking in a separate process
     new webpack.ProgressPlugin(),
-    // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
     new CopyWebpackPlugin({
       patterns: [
@@ -154,8 +157,8 @@ var options = {
           from: 'src/manifest.json',
           to: path.join(__dirname, 'build'),
           force: true,
-          transform: function (content, path) {
-            // generates the manifest file using the package.json informations
+          transform: function (content: Buffer, filePath: string): Buffer {
+            // Typed parameters
             return Buffer.from(
               JSON.stringify({
                 description: process.env.npm_package_description,
@@ -165,28 +168,16 @@ var options = {
             );
           },
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
           from: 'src/pages/Content/content.styles.css',
           to: path.join(__dirname, 'build'),
           force: true,
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
           from: 'src/assets/img/icon-128.png',
           to: path.join(__dirname, 'build'),
           force: true,
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
           from: 'src/assets/img/icon-34.png',
           to: path.join(__dirname, 'build'),
@@ -224,13 +215,14 @@ var options = {
       chunks: ['panel'],
       cache: false,
     }),
-  ].filter(Boolean),
+  ].filter(Boolean) as webpack.WebpackPluginInstance[], // Type assertion for filtered array
   infrastructureLogging: {
     level: 'info',
   },
 };
 
-if (env.NODE_ENV === 'development') {
+if (isDevelopment) {
+  // Ensure devtool is a valid Webpack 5 devtool value
   options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {
@@ -243,4 +235,4 @@ if (env.NODE_ENV === 'development') {
   };
 }
 
-module.exports = options;
+export default options; // Use ES6 export default

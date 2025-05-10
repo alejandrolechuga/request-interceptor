@@ -1,5 +1,6 @@
 // src/components/__tests__/NetworkTable.test.tsx
 import React from 'react';
+
 import { render, screen } from '@testing-library/react';
 
 // Ensure jest-dom is imported globally in your Jest setup file if not already done

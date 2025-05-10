@@ -4,7 +4,7 @@ import { printLine } from './modules/print';
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
   printLine('fetch', args);
-  const response = await originalFetch(...args);
+  await originalFetch(...args);
   // apply rule here
   const hardcodedResponse = {
     status: 200,
