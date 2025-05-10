@@ -6,8 +6,8 @@ import './index.css';
 
 const container = document.getElementById('app-container');
 if (container) {
-    const root = createRoot(container); // createRoot(container!) if you use TypeScript
-    root.render(<Popup />);
+  const root = createRoot(container); // createRoot(container!) if you use TypeScript
+  root.render(<Popup />);
 } else {
-    console.error('App container not found');
+  console.error('App container not found');
 }

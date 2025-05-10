@@ -6,8 +6,8 @@ import './index.css';
 
 const container = document.getElementById('app-container');
 if (container) {
-    const root = createRoot(container);
-    root.render(<Options title={'Settings'} />);
+  const root = createRoot(container);
+  root.render(<Options title={'Settings'} />);
 } else {
-    console.error('App container not found');
+  console.error('App container not found');
 }

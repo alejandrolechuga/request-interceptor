@@ -29,7 +29,7 @@ var server = new WebpackDevServer(
   {
     https: {
       key: fs.readFileSync(path.join(__dirname, 'certs/localhost+2-key.pem')),
-      cert: fs.readFileSync(path.join(__dirname, 'certs/localhost+2.pem'))
+      cert: fs.readFileSync(path.join(__dirname, 'certs/localhost+2.pem')),
     },
     hot: true,
     liveReload: false,
@@ -38,8 +38,8 @@ var server = new WebpackDevServer(
       webSocketURL: {
         protocol: 'wss',
         hostname: 'localhost',
-        port: env.PORT
-      }
+        port: env.PORT,
+      },
     },
     webSocketServer: 'sockjs',
     host: 'localhost',

@@ -4,9 +4,8 @@ import Options from './Options';
 import './index.css';
 const container = document.getElementById('app-container');
 if (container) {
-    const root = createRoot(container);
-    root.render(React.createElement(Options, { title: 'Settings' }));
-}
-else {
-    console.error('App container not found');
+  const root = createRoot(container);
+  root.render(React.createElement(Options, { title: 'Settings' }));
+} else {
+  console.error('App container not found');
 }
