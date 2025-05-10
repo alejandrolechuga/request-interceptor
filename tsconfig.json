@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "rootDir": "src",
-    "outDir": "build",
-    "allowJs": true,
+    "rootDir": "./src",
+    "outDir": "./build",
+    "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -20,13 +20,21 @@
     "resolveJsonModule": true,
     "noEmit": false,
     "jsx": "react",
+    "baseUrl": "./",
     "types": [
       "jest",
-      "@testing-library/jest-dom"
-    ]
+      "@testing-library/jest-dom",
+      "chrome"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
-    "src"
+    "src/**/*",
+    "src/types/assets.d.ts",
   ],
   "exclude": [
     "build",

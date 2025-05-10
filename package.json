@@ -8,6 +8,7 @@
     "url": "https://github.com/lxieyang/chrome-extension-boilerplate-react.git"
   },
   "scripts": {
+    "type-check": "tsc --noEmit",
     "build": "node utils/build.js",
     "test": "jest",
     "start": "node utils/webserver.js",
@@ -46,6 +47,7 @@
     "eslint-plugin-react": "^7.32.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
     "fs-extra": "^11.1.0",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",

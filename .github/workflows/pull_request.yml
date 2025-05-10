@@ -23,9 +23,13 @@ jobs:
       
       - name: Install deps
         run: npm ci
-
-      - name: Build
-        run: npm run build
+      
+      - name: type check
+        run: npm run type-check
 
       - name: Test
         run: npm test
+
+      - name: Build
+        run: npm run build
+     

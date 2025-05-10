@@ -5,5 +5,11 @@ import Newtab from './Newtab';
 import './index.css';
 
 const container = document.getElementById('app-container');
-const root = createRoot(container); // createRoot(container!) if you use TypeScript
-root.render(<Newtab />);
+if (container) {
+    const root = createRoot(container);
+    root.render(<Newtab />);
+} else {
+    console.error('App container not found');
+}
+
+
