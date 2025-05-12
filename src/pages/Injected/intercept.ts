@@ -1,7 +1,7 @@
 import { RequestHandler } from './RequestHandler';
 
 const originalFetch = window.fetch;
-const mapFetchArguments = (...args: any[]) => {
+const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   const requestInput: RequestInfo | URL = args[0];
   const requestInit: RequestInit | undefined = args[1];
 
@@ -32,7 +32,7 @@ const mapFetchArguments = (...args: any[]) => {
 };
 
 export const interceptFetch = (requestHandler: RequestHandler) => {
-  window.fetch = async (...args: any[]) => {
+  window.fetch = async (...args: [RequestInfo | URL, RequestInit?]) => {
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
       ...args
     );
