@@ -17,7 +17,7 @@
   "icons": {
     "128": "icon-128.png"
   },
-  "permissions": ["scripting", "storage"],
+  "permissions": ["scripting", "tabs"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
@@ -25,7 +25,13 @@
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"],
       "run_at": "document_start",
-      "world": "MAIN"
+      "world": "ISOLATED"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["injected.bundle.js"],
+      "matches": ["<all_urls>"]
     }
   ]
 }
