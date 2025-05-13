@@ -24,7 +24,6 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
         </tr>
       </thead>
       <tbody>
-
         {mockRequests.map((request) => (
           <tr key={request.id}>
             <td>{request.url}</td>
@@ -32,7 +31,6 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
             <td>{request.response}</td>
           </tr>
         ))}
-
       </tbody>
     </table>
   );
