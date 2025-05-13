@@ -1,6 +1,7 @@
 import React from 'react';
 import './style.css';
-import mockRequests from '../mocks/requests.json'
+import mockRequests from '../mocks/requests.json';
+
 export interface Request {
   id: string;
   url: string;
@@ -8,16 +9,11 @@ export interface Request {
   response: string;
 }
 
-
 interface NetworkTableProps {
   requests: Request[];
 }
 
-
-
 const NetworkTable: React.FC<NetworkTableProps> = () => {
-
-
   return (
     <table>
       <thead>
