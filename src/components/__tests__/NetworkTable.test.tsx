@@ -32,47 +32,47 @@ describe('<NetworkTable />', () => {
     const mockRequests: Request[] = [
       // Use 'any' to avoid defining a new interface
       {
-        'id': '1',
-        'url': 'https://api.example.com/data',
-        'status': 200,
-        'response': '{\"message\": \"Data fetched successfully.\"}'
+      `id`: '1',
+      `url`: 'https://api.example.com/data',
+      `status`: 200,
+      `response` : '{\"message\": \"Data fetched successfully.\"}'
       },
-      {
-        'id': '2',
-        'url': 'https://api.example.com/protected',
-        'status': 401,
-        'response': '{\"error\": \"Unauthorized access.\"}'
+    {
+      `id`: '2',
+    `url`: 'https://api.example.com/protected',
+    `status`: 401,
+    `response`: '{\"error\": \"Unauthorized access.\"}'
       },
-      {
-        'id': '3',
-        'url': 'https://static.example.com/image.png',
-        'status': 304,
-        'response': ''
+  {
+      `id`: '3',
+  `url`: 'https://static.example.com/image.png',
+  `status`: 304,
+  `response`: ''
       },
-      {
-        'id': '4',
-        'url': 'https://service.anotherapi.net/info',
-        'status': 200,
-        'response': '{\"version\": \"1.5\", \"build_date\": \"2025-05-05\"}'
+  {
+      `id`: '4',
+  `url`: 'https://service.anotherapi.net/info',
+  `status`: 200,
+  `response`: '{\"version\": \"1.5\", \"build_date\": \"2025-05-05\"}'
       },
     ];
-    renderNetworkTable(mockRequests);
+renderNetworkTable(mockRequests);
 
-    // Use screen.getAllByRole to get all table rows
-    const rows = screen.getAllByRole('row');
+// Use screen.getAllByRole to get all table rows
+const rows = screen.getAllByRole('row');
 
-    // Assert that the number of rows is correct (header + data rows)
-    expect(rows).toHaveLength(mockRequests.length + 1);
+// Assert that the number of rows is correct (header + data rows)
+expect(rows).toHaveLength(mockRequests.length + 1);
 
-    // Iterate through the mock requests and assert that the data is rendered correctly
-    mockRequests.forEach((request, index) => {
-      // rows[index + 1] because the first row is the header
-      const row = rows[index + 1];
+// Iterate through the mock requests and assert that the data is rendered correctly
+mockRequests.forEach((request, index) => {
+  // rows[index + 1] because the first row is the header
+  const row = rows[index + 1];
 
-      // Use findByText within the row to target specific cells
-      expect(row).toHaveTextContent(request.url);
-      expect(row).toHaveTextContent(request.status.toString()); // Convert status to string
-      expect(row).toHaveTextContent(request.response);
-    });
+  // Use findByText within the row to target specific cells
+  expect(row).toHaveTextContent(request.url);
+  expect(row).toHaveTextContent(request.status.toString()); // Convert status to string
+  expect(row).toHaveTextContent(request.response);
+});
   });
 });
