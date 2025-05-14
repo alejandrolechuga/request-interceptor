@@ -43,7 +43,7 @@ const TruncateUrl: React.FC<TruncateUrlProps> = ({
         'max-w-[200px]' // Default max width, can be overridden by className
       )}
     >
-     {truncatedUrl}
+      {truncatedUrl}
     </a>
   );
 };
