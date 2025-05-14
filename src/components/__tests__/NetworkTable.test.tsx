@@ -32,28 +32,28 @@ describe('<NetworkTable />', () => {
     const mockRequests: Request[] = [
       // Use 'any' to avoid defining a new interface
       {
-        "id": "1",
-        "url": "https://api.example.com/data",
-        "status": 200,
-        "response": "{\"message\": \"Data fetched successfully.\"}"
+        'id': '1',
+        'url': 'https://api.example.com/data',
+        'status': 200,
+        'response': '{\"message\": \"Data fetched successfully.\"}'
       },
       {
-        "id": "2",
-        "url": "https://api.example.com/protected",
-        "status": 401,
-        "response": "{\"error\": \"Unauthorized access.\"}"
+        'id': '2',
+        'url': 'https://api.example.com/protected',
+        'status': 401,
+        'response': '{\"error\": \"Unauthorized access.\"}'
       },
       {
-        "id": "3",
-        "url": "https://static.example.com/image.png",
-        "status": 304,
-        "response": ""
+        'id': '3',
+        'url': 'https://static.example.com/image.png',
+        'status': 304,
+        'response': ''
       },
       {
-        "id": "4",
-        "url": "https://service.anotherapi.net/info",
-        "status": 200,
-        "response": "{\"version\": \"1.5\", \"build_date\": \"2025-05-05\"}"
+        'id': '4',
+        'url': 'https://service.anotherapi.net/info',
+        'status': 200,
+        'response': '{\"version\": \"1.5\", \"build_date\": \"2025-05-05\"}'
       },
     ];
     renderNetworkTable(mockRequests);
