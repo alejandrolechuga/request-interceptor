@@ -24,24 +24,24 @@ interface TruncateUrlProps {
 const TruncateUrl: React.FC<TruncateUrlProps> = ({
   url,
   maxLength = 200,
-   className, 
-  }) => {
+   className,
+}) => {
   const truncatedUrl =
-  url.length > maxLength ? url.substring(0, maxLength) + '...' : url;
+    url.length > maxLength ? url.substring(0, maxLength) + '...' : url;
 
   return (
-      <a
-        href={url}
-        title={url}
-        target="_blank" // Good practice for external links
-        rel="noopener noreferrer" // Important for security with target="_blank"
-        className={clsx(
-          'truncate-url', // Base class
-          className,       // Allow additional classes
-          'text-white-500 hover:underline', // Basic link styling
-          'whitespace-nowrap overflow-hidden text-ellipsis', // Core truncation
-          'max-w-[200px]' // Default max width, can be overridden by className
-        )}
+   <a
+      href={url}
+      title={url}
+      target="_blank" // Good practice for external links
+      rel="noopener noreferrer" // Important for security with target="_blank"
+      className={clsx(
+      'truncate-url', // Base class
+      className, // Allow additional classes
+      'text-white-500 hover:underline', // Basic link styling
+      'whitespace-nowrap overflow-hidden text-ellipsis', // Core truncation
+      'max-w-[200px]' // Default max width, can be overridden by className
+      )}
       >
         {truncatedUrl}
       </a>
