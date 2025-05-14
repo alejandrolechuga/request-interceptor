@@ -31,7 +31,7 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
               <td>{request.url}</td>
               <td>{request.status}</td>
               <td>
-                <Button size="medium" onClick={() => { }}>
+                <Button size="medium" onClick={() => {}}>
                   View
                 </Button>
               </td>
