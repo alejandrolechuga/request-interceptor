@@ -25,17 +25,19 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
         </tr>
       </thead>
       <tbody>
-        {mockRequests.length > 0 ? (mockRequests.map((request) => (
-          <tr key={request.id}>
-            <td>{request.url}</td>
-            <td>{request.status}</td>
-            <td>
-              <Button size="medium" onClick={() => { }}>
-                View
-              </Button>
-            </td>
-          </tr>
-        ))) : (
+        {mockRequests.length > 0 ? (
+          mockRequests.map((request) => (
+            <tr key={request.id}>
+              <td>{request.url}</td>
+              <td>{request.status}</td>
+              <td>
+                <Button size="medium" onClick={() => { }}>
+                  View
+                </Button>
+              </td>
+            </tr>
+          ))
+        ) : (
           <tr>
             <td colSpan={3} style={{ textAlign: 'center' }}>
               No requests available
