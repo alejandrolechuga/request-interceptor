@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 
 // Ensure jest-dom is imported globally in your Jest setup file if not already done
 import NetworkTable, { Request } from '../NetworkTable'; // Adjust the path if necessary
+// Import the mock requests data
 import mockRequests from '../../mocks/requests.json';
 
 describe('<NetworkTable />', () => {
@@ -30,33 +31,7 @@ describe('<NetworkTable />', () => {
   });
 
   it.skip('renders rows with request data passed in the props', () => {
-    /*   const mockRequests: Request[] = [
-         // Use 'any' to avoid defining a new interface
-         {
-         `id`: '1',
-         `url`: 'https://api.example.com/data',
-         `status`: 200,
-         `response` : '{\"message\": \"Data fetched successfully.\"}'
-         },
-       {
-         `id`: '2',
-       `url`: 'https://api.example.com/protected',
-       `status`: 401,
-       `response`: '{\"error\": \"Unauthorized access.\"}'
-         },
-     {
-         `id`: '3',
-     `url`: 'https://static.example.com/image.png',
-     `status`: 304,
-     `response`: ''
-         },
-     {
-         `id`: '4',
-     `url`: 'https://service.anotherapi.net/info',
-     `status`: 200,
-     `response`: '{\"version\": \"1.5\", \"build_date\": \"2025-05-05\"}'
-         },
-       ]; */
+    // Mock requests data
     renderNetworkTable(mockRequests);
 
     // Use screen.getAllByRole to get all table rows
