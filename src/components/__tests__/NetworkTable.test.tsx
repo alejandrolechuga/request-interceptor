@@ -30,7 +30,7 @@ describe('<NetworkTable />', () => {
     expect(screen.getByText('Response')).toBeInTheDocument();
   });
 
-  it.skip('renders rows with request data passed in the props', () => {
+  it('renders rows with request data passed in the props', () => {
     // Mock requests data
     renderNetworkTable(mockRequests);
 
