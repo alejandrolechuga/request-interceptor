@@ -33,7 +33,9 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
           mockRequests.map((request) => (
             <tr key={request.id}>
               <td>
-                <p title={request.url} className="truncated-url" >{request.url}</p>
+                <p title={request.url} className="truncated-url">
+                  {request.url}
+                </p>
               </td>
               <td>{request.status}</td>
               <td>
