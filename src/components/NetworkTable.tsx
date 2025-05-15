@@ -13,13 +13,6 @@ interface NetworkTableProps {
   requests: Request[];
 }
 
-interface TruncateUrlProps {
-  url: string;
-  maxLength?: number; // Optional: Allow customizing the maximum length
-  className?: string; // Optional: Allow additional CSS classes
-}
-
-
 const NetworkTable: React.FC<NetworkTableProps> = () => {
   const handleViewClick = (request: Request) => {
     // Implement your view logic here.  For this example, we'll just log to the console.
