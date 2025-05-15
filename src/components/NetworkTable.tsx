@@ -1,7 +1,6 @@
 import React from 'react';
 import './style.css';
 import mockRequests from '../mocks/requests.json';
-import Button from '@mui/material/Button';
 
 export interface Request {
   id: string;
@@ -16,9 +15,7 @@ interface NetworkTableProps {
 
 const NetworkTable: React.FC<NetworkTableProps> = () => {
   const handleViewClick = (request: Request) => {
-    // Implement your view logic here.  For this example, we'll just log to the console.
     console.log('View clicked for request:', request);
-    // In a real application, you'd likely open a modal, navigate to a new page, etc.
   };
   return (
     <table>
@@ -36,9 +33,9 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
               <td>{request.url}</td>
               <td>{request.status}</td>
               <td>
-                <Button size="medium" onClick={() => handleViewClick(request)}>
-                  View
-                </Button>
+                <button onClick={() => handleViewClick(request)}>
+                  View Response
+                </button>
               </td>
             </tr>
           ))
