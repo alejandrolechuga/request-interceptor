@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import mockRequests from '../mocks/requests.json';
 
 export interface Request {
   id: string;
@@ -12,7 +13,7 @@ interface NetworkTableProps {
   requests: Request[];
 }
 
-const NetworkTable: React.FC<NetworkTableProps> = ({ requests }) => {
+const NetworkTable: React.FC<NetworkTableProps> = () => {
   return (
     <table>
       <thead>
@@ -22,7 +23,15 @@ const NetworkTable: React.FC<NetworkTableProps> = ({ requests }) => {
           <th className="header">Response</th>
         </tr>
       </thead>
-      <tbody>{/* Table body content will go here */}</tbody>
+      <tbody>
+        {mockRequests.map((request) => (
+          <tr key={request.id}>
+            <td>{request.url}</td>
+            <td>{request.status}</td>
+            <td>{request.response}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
