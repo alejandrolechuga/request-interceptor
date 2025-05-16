@@ -48,7 +48,7 @@ describe('<NetworkTable />', () => {
       // Use findByText within the row to target specific cells
       expect(row).toHaveTextContent(request.url);
       expect(row).toHaveTextContent(request.status.toString()); // Convert status to string
-      expect(row).toHaveTextContent(request.response);
+      expect(row).toHaveTextContent('View Response');
     });
   });
 });

@@ -14,6 +14,9 @@ interface NetworkTableProps {
 }
 
 const NetworkTable: React.FC<NetworkTableProps> = () => {
+  const handleViewClick = (request: Request) => {
+    console.log('View clicked for request:', request);
+  };
   return (
     <table>
       <thead>
@@ -24,13 +27,25 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
         </tr>
       </thead>
       <tbody>
-        {mockRequests.map((request) => (
-          <tr key={request.id}>
-            <td>{request.url}</td>
-            <td>{request.status}</td>
-            <td>{request.response}</td>
+        {mockRequests.length > 0 ? (
+          mockRequests.map((request) => (
+            <tr key={request.id}>
+              <td>{request.url}</td>
+              <td>{request.status}</td>
+              <td>
+                <button onClick={() => handleViewClick(request)}>
+                  View Response
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={3} style={{ textAlign: 'center' }}>
+              No requests available
+            </td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );
