@@ -30,7 +30,11 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
         {mockRequests.length > 0 ? (
           mockRequests.map((request) => (
             <tr key={request.id}>
-              <td>{request.url}</td>
+              <td>
+                <p title={request.url} className="truncated-url">
+                  {request.url}
+                </p>
+              </td>
               <td>{request.status}</td>
               <td>
                 <button onClick={() => handleViewClick(request)}>

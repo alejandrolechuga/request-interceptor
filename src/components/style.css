@@ -3,3 +3,10 @@
   /* Example for semibold */
   color: #e30d0d;
 }
+
+.truncated-url {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 300px; /* Adjust this value as needed */
+}
