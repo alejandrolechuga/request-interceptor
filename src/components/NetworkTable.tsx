@@ -12,7 +12,7 @@ interface NetworkTableProps {
   requests: Request[];
 }
 
-const NetworkTable: React.FC<NetworkTableProps> = ({requests}) => {
+const NetworkTable: React.FC<NetworkTableProps> = ({ requests }) => {
   const handleViewClick = (request: Request) => {
     console.log('View clicked for request:', request);
   };
