@@ -2,16 +2,17 @@ import React from 'react';
 
 import './Panel.css';
 import NetworkTable from '../../components/NetworkTable';
+import mockData from '../../mocks/requests.json';
 
-const Panel: React.FC = () => {
+const App: React.FC = () => {
   return (
     <div className="container">
       <h1>Dev Tools Panel</h1>
-      <div>
-        <NetworkTable requests={[]} />
+      <div data-testid="app-container">
+        <NetworkTable requests={mockData} />
       </div>
     </div>
   );
 };
 
-export default Panel;
+export default App;
