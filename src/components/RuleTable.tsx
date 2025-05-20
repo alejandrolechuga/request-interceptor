@@ -1,14 +1,8 @@
 import React from 'react';
 import './style.css';
 import RuleRow from './RuleRow';
-
-export interface Rule {
-  id: string;
-  urlPattern: string;
-  method: string;
-  enabled: boolean;
-  date: string;
-}
+import type { Rule } from '../types/rule';
+import { COLUMN_ORDER, COLUMN_LABELS, RuleColumn } from './columnConfig';
 
 interface RuleTableProps {
   rules: Rule[];
@@ -19,19 +13,21 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
     <table>
       <thead>
         <tr>
-          <th className="header">URL Pattern</th>
-          <th className="header">Method</th>
-          <th className="header">Enabled</th>
-          <th className="header">Date</th>
-          <th className="header">Edit</th>
+          {COLUMN_ORDER.map((column) => (
+            <th key={column} className="header">
+              {COLUMN_LABELS[column]}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>
         {rules.length > 0 ? (
-          rules.map((rule) => <RuleRow key={rule.id} rule={rule} />)
+          rules.map((rule) => (
+            <RuleRow key={rule.id} rule={rule} columns={COLUMN_ORDER} />
+          ))
         ) : (
           <tr>
-            <td colSpan={5} style={{ textAlign: 'center' }}>
+            <td colSpan={COLUMN_ORDER.length} style={{ textAlign: 'center' }}>
               No rules available
             </td>
           </tr>
