@@ -3,7 +3,9 @@ import React from 'react';
 
 import { render, screen } from '@testing-library/react';
 
-import RuleTable, { Rule } from '../RuleTable';
+import RuleTable from '../RuleTable';
+import type { Rule } from '../../types/rule';
+import { COLUMN_ORDER, COLUMN_LABELS } from '../columnConfig';
 import mockRules from '../../mocks/rules.json';
 
 describe('<RuleTable />', () => {
@@ -22,11 +24,11 @@ describe('<RuleTable />', () => {
 
   it('renders the correct table headers', () => {
     renderRuleTable();
-    expect(screen.getByText('URL Pattern')).toBeInTheDocument();
-    expect(screen.getByText('Method')).toBeInTheDocument();
-    expect(screen.getByText('Enabled')).toBeInTheDocument();
-    expect(screen.getByText('Date')).toBeInTheDocument();
-    expect(screen.getByText('Edit')).toBeInTheDocument();
+    const headers = screen.getAllByRole('columnheader');
+    expect(headers).toHaveLength(COLUMN_ORDER.length);
+    COLUMN_ORDER.forEach((column) => {
+      expect(screen.getByText(COLUMN_LABELS[column])).toBeInTheDocument();
+    });
   });
 
   it('renders rows with request data passed in the props', () => {
@@ -43,6 +45,9 @@ describe('<RuleTable />', () => {
     mockRules.forEach((rule, index) => {
       // rows[index + 1] because the first row is the header
       const row = rows[index + 1];
+      const cells = row.querySelectorAll('td');
+      expect(cells).toHaveLength(COLUMN_ORDER.length);
+
       expect(row).toHaveTextContent(rule.urlPattern);
       expect(row).toHaveTextContent(rule.method);
       expect(row).toHaveTextContent(rule.enabled ? 'Yes' : 'No');
@@ -51,6 +56,17 @@ describe('<RuleTable />', () => {
       const editButton = row.querySelector('button');
       expect(editButton).toBeInTheDocument();
       expect(editButton).toHaveTextContent('Edit');
+    });
+  });
+
+  it('header and row column counts match', () => {
+    renderRuleTable(mockRules);
+    const headerCells = screen.getAllByRole('columnheader');
+    const dataRows = screen.getAllByRole('row').slice(1);
+
+    dataRows.forEach((row) => {
+      const cells = row.querySelectorAll('td');
+      expect(cells).toHaveLength(headerCells.length);
     });
   });
 });

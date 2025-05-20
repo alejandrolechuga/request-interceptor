@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import RuleRow from '../RuleRow';
-import type { Rule } from '../RuleTable';
+import type { Rule } from '../../types/rule';
+import { COLUMN_ORDER } from '../columnConfig';
 
 const rule: Rule = {
   id: '1',
@@ -16,12 +17,15 @@ describe('<RuleRow />', () => {
     render(
       <table>
         <tbody>
-          <RuleRow rule={rule} />
+          <RuleRow rule={rule} columns={COLUMN_ORDER} />
         </tbody>
       </table>
     );
 
     const row = screen.getByRole('row');
+    const cells = row.querySelectorAll('td');
+    expect(cells).toHaveLength(COLUMN_ORDER.length);
+
     expect(row).toHaveTextContent(rule.urlPattern);
     expect(row).toHaveTextContent(rule.method);
     expect(row).toHaveTextContent('Yes');
