@@ -1,6 +1,5 @@
 import React from 'react';
 import './style.css';
-import mockRequests from '../mocks/requests.json';
 
 export interface Request {
   id: string;
@@ -13,7 +12,7 @@ interface NetworkTableProps {
   requests: Request[];
 }
 
-const NetworkTable: React.FC<NetworkTableProps> = () => {
+const NetworkTable: React.FC<NetworkTableProps> = ({ requests }) => {
   const handleViewClick = (request: Request) => {
     console.log('View clicked for request:', request);
   };
@@ -27,8 +26,8 @@ const NetworkTable: React.FC<NetworkTableProps> = () => {
         </tr>
       </thead>
       <tbody>
-        {mockRequests.length > 0 ? (
-          mockRequests.map((request) => (
+        {requests.length > 0 ? (
+          requests.map((request) => (
             <tr key={request.id}>
               <td>
                 <p title={request.url} className="truncated-url">
