@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Panel.css';
+import './App.css';
 import RuleTable from '../../components/RuleTable';
 import mockData from '../../mocks/rules.json';
 
