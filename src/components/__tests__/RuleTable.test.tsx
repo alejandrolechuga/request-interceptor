@@ -26,6 +26,7 @@ describe('<RuleTable />', () => {
     expect(screen.getByText('Method')).toBeInTheDocument();
     expect(screen.getByText('Enabled')).toBeInTheDocument();
     expect(screen.getByText('Date')).toBeInTheDocument();
+    expect(screen.getByText('Edit')).toBeInTheDocument();
   });
 
   it('renders rows with request data passed in the props', () => {
@@ -46,6 +47,10 @@ describe('<RuleTable />', () => {
       expect(row).toHaveTextContent(rule.method);
       expect(row).toHaveTextContent(rule.enabled ? 'Yes' : 'No');
       expect(row).toHaveTextContent(rule.date);
+
+      const editButton = row.querySelector('button');
+      expect(editButton).toBeInTheDocument();
+      expect(editButton).toHaveTextContent('Edit');
     });
   });
 });
