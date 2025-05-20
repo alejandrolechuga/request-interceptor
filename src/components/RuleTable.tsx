@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import RuleRow from './RuleRow';
 
 export interface Rule {
   id: string;
@@ -26,18 +27,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
       </thead>
       <tbody>
         {rules.length > 0 ? (
-          rules.map((rule) => (
-            <tr key={rule.id}>
-              <td>
-                <p title={rule.urlPattern} className="truncated-url">
-                  {rule.urlPattern}
-                </p>
-              </td>
-              <td>{rule.method}</td>
-              <td>{rule.enabled ? 'Yes' : 'No'}</td>
-              <td>{rule.date}</td>
-            </tr>
-          ))
+          rules.map((rule) => <RuleRow key={rule.id} rule={rule} />)
         ) : (
           <tr>
             <td colSpan={4} style={{ textAlign: 'center' }}>
