@@ -1,15 +1,15 @@
 import React from 'react';
 
 import './Panel.css';
-import NetworkTable from '../../components/NetworkTable';
-import mockData from '../../mocks/requests.json';
+import RuleTable from '../../components/RuleTable';
+import mockData from '../../mocks/rules.json';
 
 const App: React.FC = () => {
   return (
     <div className="container">
       <h1>Dev Tools Panel</h1>
       <div data-testid="app-container">
-        <NetworkTable requests={mockData} />
+        <RuleTable rules={mockData} />
       </div>
     </div>
   );
