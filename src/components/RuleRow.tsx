@@ -17,6 +17,9 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule }) => {
       <td>{rule.method}</td>
       <td>{rule.enabled ? 'Yes' : 'No'}</td>
       <td>{rule.date}</td>
+      <td>
+        <button type="button">Edit</button>
+      </td>
     </tr>
   );
 };
