@@ -23,6 +23,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
           <th className="header">Method</th>
           <th className="header">Enabled</th>
           <th className="header">Date</th>
+          <th className="header">Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -30,7 +31,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
           rules.map((rule) => <RuleRow key={rule.id} rule={rule} />)
         ) : (
           <tr>
-            <td colSpan={4} style={{ textAlign: 'center' }}>
+            <td colSpan={5} style={{ textAlign: 'center' }}>
               No rules available
             </td>
           </tr>
