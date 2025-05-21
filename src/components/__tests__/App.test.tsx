@@ -1,18 +1,28 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import App from '../../pages/Panel/App';
+import { Provider } from 'react-redux';
+import { store } from '../../store';
 import mockData from '../../mocks/rules.json';
 
 describe('<App />', () => {
   it('renders the app container', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const appContainer = screen.getByTestId('app-container');
     expect(appContainer).toBeInTheDocument();
   });
 
   it('filters rules based on url', () => {
     jest.useFakeTimers();
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const input = screen.getByPlaceholderText('Type out to filter list');
     fireEvent.change(input, { target: { value: 'static' } });
 
@@ -29,7 +39,11 @@ describe('<App />', () => {
   });
 
   it('clears the filter and shows all rules', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const input = screen.getByPlaceholderText('Type out to filter list');
     fireEvent.change(input, { target: { value: 'static' } });
 
@@ -38,5 +52,17 @@ describe('<App />', () => {
 
     const rows = screen.getAllByRole('row');
     expect(rows).toHaveLength(mockData.length + 1);
+  });
+
+  it('toggles enable rules checkbox', () => {
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    const checkbox = screen.getByLabelText('Enable rules');
+    expect(checkbox).not.toBeChecked();
+    fireEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
   });
 });
