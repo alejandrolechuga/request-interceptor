@@ -28,8 +28,7 @@ describe('rulesetSlice', () => {
   ];
 
   it('should add a rule', () => {
-    const newRule: Rule = {
-      id: '3',
+    const newRule = {
       urlPattern: 'https://new.example.com/*',
       method: 'PUT',
       enabled: true,
@@ -38,7 +37,8 @@ describe('rulesetSlice', () => {
     };
     const state = reducer(initialState, addRule(newRule));
     expect(state).toHaveLength(3);
-    expect(state[2]).toEqual(newRule);
+    expect(state[2]).toMatchObject(newRule);
+    expect(state[2].id).toBeDefined();
   });
 
   it('should remove a rule by id', () => {
