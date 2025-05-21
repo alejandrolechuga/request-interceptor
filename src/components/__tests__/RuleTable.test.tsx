@@ -53,9 +53,10 @@ describe('<RuleTable />', () => {
       expect(row).toHaveTextContent(rule.enabled ? 'Yes' : 'No');
       expect(row).toHaveTextContent(rule.date);
 
-      const editButton = row.querySelector('button');
-      expect(editButton).toBeInTheDocument();
-      expect(editButton).toHaveTextContent('Edit');
+      const buttons = row.querySelectorAll('button');
+      expect(buttons).toHaveLength(2);
+      expect(buttons[0]).toHaveTextContent('Edit');
+      expect(buttons[1]).toHaveTextContent('Delete');
     });
   });
 

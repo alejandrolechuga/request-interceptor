@@ -19,5 +19,5 @@ export const COLUMN_LABELS: Record<RuleColumn, string> = {
   [RuleColumn.Method]: 'Method',
   [RuleColumn.Enabled]: 'Enabled',
   [RuleColumn.Date]: 'Date',
-  [RuleColumn.Edit]: 'Edit',
+  [RuleColumn.Edit]: 'Actions',
 };

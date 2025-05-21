@@ -24,7 +24,12 @@ const renderCell = (column: RuleColumn, rule: Rule): React.ReactNode => {
       return rule.date;
     case RuleColumn.Edit:
     default:
-      return <button type="button">Edit</button>;
+      return (
+        <>
+          <button type="button">Edit</button>
+          <button type="button">Delete</button>
+        </>
+      );
   }
 };
 
