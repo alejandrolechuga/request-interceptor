@@ -53,3 +53,11 @@ Generate a coverage report with:
 ```bash
 npm run test:coverage
 ```
+
+Compare coverage with the previous baseline and print the result using a TypeScript utility:
+
+```bash
+npm run coverage:report
+
+The pull request workflow runs this command and posts its output as a comment on the PR, highlighting any drop in coverage.
+```

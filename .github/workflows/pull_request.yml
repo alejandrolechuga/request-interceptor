@@ -35,4 +35,17 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Generate coverage
+        run: npm run test:coverage
+
+      - name: Compare coverage
+        run: npm run coverage:report > coverage-report.txt
+
+      - name: Comment coverage diff
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ github.token }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: coverage-report.txt
      
