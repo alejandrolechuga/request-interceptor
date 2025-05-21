@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setEnableRuleset } from '../../store/settingsSlice';
+import { addRule } from '../../Panel/ruleset/rulesetSlice';
 
 import './app.css';
 import RuleTable from '../../components/RuleTable';
@@ -11,13 +12,15 @@ const App: React.FC = () => {
   const [filter, setFilter] = useState('');
   const dispatch = useAppDispatch();
   const enableRuleset = useAppSelector((state) => state.settings.enableRuleset);
+  const rules = useAppSelector((state) => state.ruleset);
 
-  const filteredRules = useMemo(() => {
-    if (!filter) return mockData;
-    return mockData.filter((rule) =>
-      rule.urlPattern.toLowerCase().includes(filter.toLowerCase())
-    );
-  }, [filter]);
+  // Temporary: preload mock rules into the store once
+  useEffect(() => {
+    if (rules.length === 0) {
+      mockData.forEach((rule) => dispatch(addRule(rule)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container">
@@ -32,7 +35,7 @@ const App: React.FC = () => {
       </label>
       <Filter value={filter} onFilterChange={setFilter} />
       <div data-testid="app-container">
-        <RuleTable rules={filteredRules} />
+        <RuleTable filter={filter} />
       </div>
     </div>
   );

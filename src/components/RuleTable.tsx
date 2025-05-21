@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './style.css';
 import RuleRow from './RuleRow';
-import type { Rule } from '../types/rule';
+import { useAppSelector } from '../store';
 import { COLUMN_ORDER, COLUMN_LABELS, RuleColumn } from './columnConfig';
 
 interface RuleTableProps {
-  rules: Rule[];
+  filter?: string;
 }
 
-const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
+const RuleTable: React.FC<RuleTableProps> = ({ filter = '' }) => {
+  const rules = useAppSelector((state) => state.ruleset);
+  const filteredRules = useMemo(() => {
+    if (!filter) return rules;
+    return rules.filter((rule) =>
+      rule.urlPattern.toLowerCase().includes(filter.toLowerCase())
+    );
+  }, [filter, rules]);
+
   return (
     <table>
       <thead>
@@ -21,8 +29,8 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
         </tr>
       </thead>
       <tbody>
-        {rules.length > 0 ? (
-          rules.map((rule) => (
+        {filteredRules.length > 0 ? (
+          filteredRules.map((rule) => (
             <RuleRow key={rule.id} rule={rule} columns={COLUMN_ORDER} />
           ))
         ) : (

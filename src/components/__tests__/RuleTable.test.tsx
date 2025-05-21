@@ -2,15 +2,26 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
-
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 import RuleTable from '../RuleTable';
 import type { Rule } from '../../types/rule';
 import { COLUMN_ORDER, COLUMN_LABELS } from '../columnConfig';
+import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
+import settingsReducer from '../../store/settingsSlice';
 import mockRules from '../../mocks/rules.json';
 
 describe('<RuleTable />', () => {
   const renderRuleTable = (rules: Rule[] = []) => {
-    render(<RuleTable rules={rules} />);
+    const store = configureStore({
+      reducer: { settings: settingsReducer, ruleset: rulesetReducer },
+      preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
+    });
+    render(
+      <Provider store={store}>
+        <RuleTable />
+      </Provider>
+    );
   };
 
   beforeEach(() => {
@@ -31,7 +42,7 @@ describe('<RuleTable />', () => {
     });
   });
 
-  it('renders rows with request data passed in the props', () => {
+  it('renders rows from the store', () => {
     // Mock requests data
     renderRuleTable(mockRules);
 

@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import settingsReducer from './settingsSlice';
+import rulesetReducer from '../Panel/ruleset/rulesetSlice';
 
 export const store = configureStore({
   reducer: {
     settings: settingsReducer,
+    ruleset: rulesetReducer,
   },
 });
 
