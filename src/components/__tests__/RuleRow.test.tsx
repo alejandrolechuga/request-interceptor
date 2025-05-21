@@ -33,6 +33,8 @@ describe('<RuleRow />', () => {
     expect(row).toHaveTextContent(rule.date);
 
     const editButton = screen.getByRole('button', { name: 'Edit' });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
     expect(editButton).toBeInTheDocument();
+    expect(deleteButton).toBeInTheDocument();
   });
 });
