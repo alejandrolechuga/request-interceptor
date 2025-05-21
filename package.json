@@ -13,6 +13,7 @@
     "start": "ts-node --project tsconfig.scripts.json utils/webserver.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "coverage:report": "ts-node --project tsconfig.scripts.json utils/coverage-report.ts",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:silent": "eslint . --ext .js,.jsx,.ts,.tsx --quiet",
