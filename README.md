@@ -53,3 +53,9 @@ Generate a coverage report with:
 ```bash
 npm run test:coverage
 ```
+
+Compare coverage with the previous baseline and print the result (runs a TypeScript script via `ts-node`):
+
+```bash
+npm run coverage:report
+```

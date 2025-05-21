@@ -33,6 +33,27 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Coverage
+        run: npm run test:coverage
+
+      - name: Compare coverage
+        run: npm run coverage:report > coverage-report.txt
+
+      - name: Comment coverage
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('coverage-report.txt', 'utf8');
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
       - name: Build
         run: npm run build
      
