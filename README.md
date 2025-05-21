@@ -57,5 +57,5 @@ npm run test:coverage
 ## Commit message guidelines
 
 Commits are checked with Commitlint and must follow the
-[Conventional Commits](https://github.com/alejandrolechuga/request-interceptor/wiki#git-convetions)
+[Conventional Commits](https://github.com/alejandrolechuga/request-interceptor/wiki#git-conventions)
 standard.
