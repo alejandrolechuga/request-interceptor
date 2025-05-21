@@ -12,6 +12,7 @@
     "build": "ts-node --project tsconfig.scripts.json utils/build.ts",
     "start": "ts-node --project tsconfig.scripts.json utils/webserver.ts",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:silent": "eslint . --ext .js,.jsx,.ts,.tsx --quiet",
