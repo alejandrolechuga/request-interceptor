@@ -42,7 +42,9 @@ for (const metric of metrics) {
   const currPct = current.total[metric].pct;
   const diff = currPct - basePct;
   const sign = diff >= 0 ? '+' : '';
-  console.log(`${metric}: ${basePct}% -> ${currPct}% (${sign}${diff.toFixed(2)}%)`);
+  console.log(
+    `${metric}: ${basePct}% -> ${currPct}% (${sign}${diff.toFixed(2)}%)`
+  );
   if (diff < 0) drop = true;
 }
 
