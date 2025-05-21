@@ -1,7 +1,7 @@
 // src/components/__tests__/RuleTable.test.tsx
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import RuleTable from '../RuleTable';
@@ -22,6 +22,7 @@ describe('<RuleTable />', () => {
         <RuleTable />
       </Provider>
     );
+    return store;
   };
 
   beforeEach(() => {
@@ -80,5 +81,20 @@ describe('<RuleTable />', () => {
       const cells = row.querySelectorAll('td');
       expect(cells).toHaveLength(headerCells.length);
     });
+  });
+
+  it('deletes a rule when the delete button is clicked', () => {
+    const rules = mockRules.slice(0, 2);
+    const store = renderRuleTable(rules);
+
+    const deleteButtons = screen.getAllByRole('button', { name: 'Delete' });
+    expect(deleteButtons).toHaveLength(2);
+
+    fireEvent.click(deleteButtons[0]);
+
+    const rows = screen.getAllByRole('row');
+    expect(rows).toHaveLength(rules.length); // header + remaining row
+    expect(screen.queryByText(rules[0].urlPattern)).not.toBeInTheDocument();
+    expect(store.getState().ruleset).toHaveLength(1);
   });
 });
