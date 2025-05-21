@@ -4,20 +4,31 @@
     "urlPattern": "https://api.example.com/*",
     "method": "GET",
     "enabled": true,
-    "date": "2024-01-01"
+    "date": "2024-01-01",
+    "response": null
   },
   {
     "id": "2",
     "urlPattern": "https://static.example.com/*",
     "method": "POST",
     "enabled": false,
-    "date": "2024-02-10"
+    "date": "2024-02-10",
+    "response": null
   },
   {
     "id": "3",
     "urlPattern": "https://service.example.com/info",
     "method": "PUT",
     "enabled": true,
-    "date": "2024-03-15"
+    "date": "2024-03-15",
+    "response": null
+  },
+  {
+    "id": "4",
+    "urlPattern": "https://jsonplaceholder.typicode.com/todos/1",
+    "method": "GET",
+    "enabled": true,
+    "date": "2024-04-01",
+    "response": "{\n  \"userId\": 1,\n  \"id\": 1,\n  \"title\": \"hello,\",\n  \"completed\": false\n}"
   }
 ]
