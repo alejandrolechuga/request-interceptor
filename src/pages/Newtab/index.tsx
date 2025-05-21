@@ -3,6 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import Newtab from './Newtab';
+import '../../tailwind.css';
 import './index.css';
 
 const container = document.getElementById('app-container');
