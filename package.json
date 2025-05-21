@@ -16,7 +16,8 @@
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:silent": "eslint . --ext .js,.jsx,.ts,.tsx --quiet",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint:commits": "commitlint --from=HEAD~1"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -90,6 +91,9 @@
     "webpack": "^5.75.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.11.1",
-    "zip-webpack-plugin": "^4.0.1"
+    "zip-webpack-plugin": "^4.0.1",
+    "@commitlint/cli": "^17.7.0",
+    "@commitlint/config-conventional": "^17.7.0"
   }
 }
+
