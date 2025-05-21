@@ -8,6 +8,7 @@
   "include": [
     "src/**/*", // All TS/TSX/JS files within src
     "utils/**/*.ts", // Your converted utility scripts
+    "lib/**/*.ts", // Your converted library files
     "webpack.config.ts", // Your Webpack configuration
     "jest.config.ts", // Your Jest configuration
     "jest.setup.ts", // Your Jest setup file
