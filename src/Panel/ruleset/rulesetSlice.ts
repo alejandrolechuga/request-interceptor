@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 import type { Rule } from '../../types/rule';
 
 type RuleUpdate = Partial<Pick<Rule, 'urlPattern' | 'method' | 'enabled'>>;
@@ -9,8 +10,13 @@ const rulesetSlice = createSlice({
   name: 'ruleset',
   initialState,
   reducers: {
-    addRule(state, action: PayloadAction<Rule>) {
-      state.push(action.payload);
+    addRule: {
+      reducer(state, action: PayloadAction<Rule>) {
+        state.push(action.payload);
+      },
+      prepare(rule: Omit<Rule, 'id'>) {
+        return { payload: { ...rule, id: uuidv4() } };
+      },
     },
     removeRule(state, action: PayloadAction<string>) {
       return state.filter((rule) => rule.id !== action.payload);

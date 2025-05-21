@@ -17,7 +17,7 @@ const App: React.FC = () => {
   // Temporary: preload mock rules into the store once
   useEffect(() => {
     if (rules.length === 0) {
-      mockData.forEach((rule) => dispatch(addRule(rule)));
+      mockData.forEach(({ id: _ignored, ...data }) => dispatch(addRule(data)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
