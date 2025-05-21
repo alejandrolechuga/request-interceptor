@@ -10,6 +10,7 @@ const rule: Rule = {
   method: 'GET',
   enabled: true,
   date: '2024-01-01',
+  response: null,
 };
 
 describe('<RuleRow />', () => {

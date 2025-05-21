@@ -4,4 +4,5 @@ export interface Rule {
   method: string;
   enabled: boolean;
   date: string;
+  response: string | null;
 }
