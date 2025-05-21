@@ -19,5 +19,4 @@ const settingsSlice = createSlice({
 });
 
 export const { setEnableRuleset } = settingsSlice.actions;
-
 export default settingsSlice.reducer;
