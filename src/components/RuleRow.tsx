@@ -22,9 +22,14 @@ const renderCell = (column: RuleColumn, rule: Rule): React.ReactNode => {
       return rule.enabled ? 'Yes' : 'No';
     case RuleColumn.Date:
       return rule.date;
-    case RuleColumn.Edit:
+    case RuleColumn.Actions:
     default:
-      return <button type="button">Edit</button>;
+      return (
+        <>
+          <button type="button">Edit</button>
+          <button type="button">Delete</button>
+        </>
+      );
   }
 };
 

@@ -3,7 +3,7 @@ export enum RuleColumn {
   Method = 'method',
   Enabled = 'enabled',
   Date = 'date',
-  Edit = 'edit',
+  Actions = 'actions',
 }
 
 export const COLUMN_ORDER: RuleColumn[] = [
@@ -11,7 +11,7 @@ export const COLUMN_ORDER: RuleColumn[] = [
   RuleColumn.Method,
   RuleColumn.Enabled,
   RuleColumn.Date,
-  RuleColumn.Edit,
+  RuleColumn.Actions,
 ];
 
 export const COLUMN_LABELS: Record<RuleColumn, string> = {
@@ -19,5 +19,5 @@ export const COLUMN_LABELS: Record<RuleColumn, string> = {
   [RuleColumn.Method]: 'Method',
   [RuleColumn.Enabled]: 'Enabled',
   [RuleColumn.Date]: 'Date',
-  [RuleColumn.Edit]: 'Edit',
+  [RuleColumn.Actions]: 'Actions',
 };
