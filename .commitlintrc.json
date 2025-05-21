@@ -1,0 +1,4 @@
+{
+  "extends": ["@commitlint/config-conventional"],
+  "helpUrl": "https://github.com/alejandrolechuga/request-interceptor/wiki#git-convetions"
+}
