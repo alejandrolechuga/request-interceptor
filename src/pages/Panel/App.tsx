@@ -22,7 +22,6 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   return (
     <div className="container">
       <h1>Dev Tools Panel</h1>
