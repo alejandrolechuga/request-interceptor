@@ -1,4 +1,4 @@
-import { EventBus } from '../../utils/EventBus';
+import { EventBus } from '../../../utils/EventBus';
 import { RequestHandlerActions } from './RequestHandlerActions';
 type RequestRecord = {
   request: {

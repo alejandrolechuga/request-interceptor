@@ -58,7 +58,14 @@ const options: MyWebpackConfiguration = {
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.ts'),
     devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.ts'),
     panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.tsx'),
-    injected: path.join(__dirname, 'src', 'pages', 'Injected', 'index.ts'),
+    intercept: path.join(
+      __dirname,
+      'src',
+      'pages',
+      'Content',
+      'Intercept',
+      'index.ts'
+    ),
   },
   chromeExtensionBoilerplate: {
     // Your custom property
@@ -168,11 +175,6 @@ const options: MyWebpackConfiguration = {
               })
             );
           },
-        },
-        {
-          from: 'src/pages/Content/content.styles.css',
-          to: path.join(__dirname, 'build'),
-          force: true,
         },
         {
           from: 'src/assets/img/icon-128.png',
