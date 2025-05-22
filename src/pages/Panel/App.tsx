@@ -16,10 +16,21 @@ const App: React.FC = () => {
   const rules = useAppSelector((state) => state.ruleset);
 
   useEffect(() => {
-    chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
-      action: RuntimeMessage.SETTINGS_UPDATE,
-      settings: { enableRuleset },
-    });
+    console.log('Enable ruleset:', enableRuleset);
+    chrome.tabs.sendMessage(
+      chrome.devtools.inspectedWindow.tabId,
+      {
+        action: RuntimeMessage.SETTINGS_UPDATE,
+        settings: { enableRuleset },
+      },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('SendMessage error:', chrome.runtime.lastError);
+        } else {
+          console.log('Got response:', response);
+        }
+      }
+    );
   }, [enableRuleset]);
 
   // Temporary: preload mock rules into the store once

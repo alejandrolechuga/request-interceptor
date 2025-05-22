@@ -1,4 +1,8 @@
-import { listenInjectedScript, listenPanelMessages } from './injectedMessaging';
+import { RuntimeMessage } from '../../types/messages';
+import { listenInjectedScript } from './injectedMessaging';
+import { listenContentScriptMessages } from './Intercept/contentScriptMessage';
 
 listenInjectedScript();
-listenPanelMessages();
+listenContentScriptMessages(RuntimeMessage.SETTINGS_UPDATE, (message) => {
+  console.log('Received settings update from panel:', message);
+});

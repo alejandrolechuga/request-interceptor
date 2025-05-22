@@ -23,8 +23,7 @@
     {
       "matches": ["<all_urls>"],
       "js": ["contentScript.bundle.js"],
-      "run_at": "document_start",
-      "world": "ISOLATED"
+      "run_at": "document_start"
     },
     {
       "matches": ["<all_urls>"],
