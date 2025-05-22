@@ -22,7 +22,7 @@
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:silent": "eslint . --ext .js,.jsx,.ts,.tsx --quiet",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --quiet",
     "lint:commits": "commitlint --edit",
     "prepare": "husky"
   },
