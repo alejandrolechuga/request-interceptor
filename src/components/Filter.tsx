@@ -45,14 +45,19 @@ const Filter: React.FC<FilterProps> = ({ value, onFilterChange }) => {
   };
 
   return (
-    <div>
+    <div className="flex items-center gap-2">
       <input
         type="text"
         placeholder="Type out to filter list"
         value={inputValue}
         onChange={handleChange}
+        className="rounded border border-gray-300 px-2 py-1 text-black"
       />
-      <button type="button" onClick={handleClear}>
+      <button
+        type="button"
+        onClick={handleClear}
+        className="rounded bg-red-600 px-2 py-1 text-white"
+      >
         Clear
       </button>
     </div>

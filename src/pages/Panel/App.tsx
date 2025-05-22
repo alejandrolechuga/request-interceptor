@@ -3,7 +3,6 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { setEnableRuleset } from '../../store/settingsSlice';
 import { addRule } from '../../Panel/ruleset/rulesetSlice';
 
-import './app.css';
 import RuleTable from '../../components/RuleTable';
 import mockData from '../../mocks/rules.json';
 import Filter from '../../components/Filter';
@@ -23,9 +22,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="container">
-      <h1>Dev Tools Panel</h1>
-      <label>
+    <div className="min-h-screen space-y-4 bg-zinc-800 p-4 text-white">
+      <h1 className="text-2xl font-bold">Dev Tools Panel</h1>
+      <label className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={enableRuleset}

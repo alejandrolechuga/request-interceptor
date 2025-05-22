@@ -3,7 +3,6 @@ import type { Rule } from '../types/rule';
 import { RuleColumn } from './columnConfig';
 import { useAppDispatch } from '../store';
 import { removeRule } from '../Panel/ruleset/rulesetSlice';
-import './RuleRow.css';
 
 interface RuleRowProps {
   rule: Rule;
@@ -18,7 +17,7 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns }) => {
     switch (column) {
       case RuleColumn.UrlPattern:
         return (
-          <p title={rule.urlPattern} className="truncated-url">
+          <p title={rule.urlPattern} className="max-w-[300px] truncate">
             {rule.urlPattern}
           </p>
         );
@@ -32,8 +31,17 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns }) => {
       default:
         return (
           <>
-            <button type="button">Edit</button>
-            <button type="button" onClick={handleDelete}>
+            <button
+              type="button"
+              className="mr-2 text-blue-600 hover:underline"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="text-red-600 hover:underline"
+            >
               Delete
             </button>
           </>
@@ -42,9 +50,11 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns }) => {
   };
 
   return (
-    <tr>
+    <tr className="even:bg-gray-800/50">
       {columns.map((column) => (
-        <td key={column}>{renderCell(column)}</td>
+        <td key={column} className="border-b px-2 py-1">
+          {renderCell(column)}
+        </td>
       ))}
     </tr>
   );
