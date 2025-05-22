@@ -1,3 +1,4 @@
-import { listenInjectedScript } from './injectedMessaging';
+import { listenInjectedScript, listenPanelMessages } from './injectedMessaging';
 
 listenInjectedScript();
+listenPanelMessages();
