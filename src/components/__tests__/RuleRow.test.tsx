@@ -18,7 +18,7 @@ const rule: Rule = {
 };
 
 describe('<RuleRow />', () => {
-  const renderRow = (rules: Rule[] = [rule]) => {
+  const renderRow = (rules: Rule[] = [rule], onEdit = jest.fn()) => {
     const store = configureStore({
       reducer: { settings: settingsReducer, ruleset: rulesetReducer },
       preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
@@ -27,7 +27,7 @@ describe('<RuleRow />', () => {
       <Provider store={store}>
         <table>
           <tbody>
-            <RuleRow rule={rules[0]} columns={COLUMN_ORDER} />
+            <RuleRow rule={rules[0]} columns={COLUMN_ORDER} onEdit={onEdit} />
           </tbody>
         </table>
       </Provider>
@@ -60,5 +60,15 @@ describe('<RuleRow />', () => {
     fireEvent.click(deleteButton);
 
     expect(store.getState().ruleset).toHaveLength(0);
+  });
+
+  it('calls onEdit when edit button clicked', () => {
+    const onEdit = jest.fn();
+    renderRow([rule], onEdit);
+
+    const editButton = screen.getByRole('button', { name: 'Edit' });
+    fireEvent.click(editButton);
+
+    expect(onEdit).toHaveBeenCalledWith(rule.id);
   });
 });

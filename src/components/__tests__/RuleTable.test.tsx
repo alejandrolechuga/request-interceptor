@@ -12,14 +12,14 @@ import settingsReducer from '../../store/settingsSlice';
 import mockRules from '../../mocks/rules.json';
 
 describe('<RuleTable />', () => {
-  const renderRuleTable = (rules: Rule[] = []) => {
+  const renderRuleTable = (rules: Rule[] = [], onEdit = jest.fn()) => {
     const store = configureStore({
       reducer: { settings: settingsReducer, ruleset: rulesetReducer },
       preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
     });
     render(
       <Provider store={store}>
-        <RuleTable />
+        <RuleTable onEdit={onEdit} />
       </Provider>
     );
     return store;
@@ -96,5 +96,15 @@ describe('<RuleTable />', () => {
     expect(rows).toHaveLength(rules.length); // header + remaining row
     expect(screen.queryByText(rules[0].urlPattern)).not.toBeInTheDocument();
     expect(store.getState().ruleset).toHaveLength(1);
+  });
+
+  it('calls onEdit when edit button clicked', () => {
+    const onEdit = jest.fn();
+    renderRuleTable(mockRules.slice(0, 1), onEdit);
+
+    const editButton = screen.getByRole('button', { name: 'Edit' });
+    fireEvent.click(editButton);
+
+    expect(onEdit).toHaveBeenCalledWith(mockRules[0].id);
   });
 });

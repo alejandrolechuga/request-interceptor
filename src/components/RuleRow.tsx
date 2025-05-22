@@ -7,11 +7,13 @@ import { removeRule } from '../Panel/ruleset/rulesetSlice';
 interface RuleRowProps {
   rule: Rule;
   columns: RuleColumn[];
+  onEdit: (id: string) => void;
 }
 
-const RuleRow: React.FC<RuleRowProps> = ({ rule, columns }) => {
+const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
   const dispatch = useAppDispatch();
   const handleDelete = () => dispatch(removeRule(rule.id));
+  const handleEdit = () => onEdit(rule.id);
 
   const renderCell = (column: RuleColumn): React.ReactNode => {
     switch (column) {
@@ -33,6 +35,7 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns }) => {
           <>
             <button
               type="button"
+              onClick={handleEdit}
               className="mr-2 text-blue-600 hover:underline"
             >
               Edit

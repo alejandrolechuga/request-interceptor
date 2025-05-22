@@ -5,9 +5,10 @@ import { COLUMN_ORDER, COLUMN_LABELS, RuleColumn } from './columnConfig';
 
 interface RuleTableProps {
   filter?: string;
+  onEdit: (id: string) => void;
 }
 
-const RuleTable: React.FC<RuleTableProps> = ({ filter = '' }) => {
+const RuleTable: React.FC<RuleTableProps> = ({ filter = '', onEdit }) => {
   const rules = useAppSelector((state) => state.ruleset);
   const filteredRules = useMemo(() => {
     if (!filter) return rules;
@@ -33,7 +34,12 @@ const RuleTable: React.FC<RuleTableProps> = ({ filter = '' }) => {
       <tbody>
         {filteredRules.length > 0 ? (
           filteredRules.map((rule) => (
-            <RuleRow key={rule.id} rule={rule} columns={COLUMN_ORDER} />
+            <RuleRow
+              key={rule.id}
+              rule={rule}
+              columns={COLUMN_ORDER}
+              onEdit={onEdit}
+            />
           ))
         ) : (
           <tr>
