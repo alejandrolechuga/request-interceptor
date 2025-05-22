@@ -3,12 +3,15 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { setEnableRuleset } from '../../store/settingsSlice';
 import { addRule } from '../../Panel/ruleset/rulesetSlice';
 
-import RuleTable from '../../components/RuleTable';
+import RuleList from '../../components/RuleList';
+import RuleForm from '../../components/RuleForm';
 import mockData from '../../mocks/rules.json';
-import Filter from '../../components/Filter';
+
+type ViewState = 'list' | 'edit' | 'add';
 
 const App: React.FC = () => {
-  const [filter, setFilter] = useState('');
+  const [view, setView] = useState<ViewState>('list');
+  const [editId, setEditId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const enableRuleset = useAppSelector((state) => state.settings.enableRuleset);
   const rules = useAppSelector((state) => state.ruleset);
@@ -32,9 +35,28 @@ const App: React.FC = () => {
         />
         Apply Rules
       </label>
-      <Filter value={filter} onFilterChange={setFilter} />
       <div data-testid="app-container">
-        <RuleTable filter={filter} />
+        {view === 'list' && (
+          <RuleList
+            onEdit={(id) => {
+              setEditId(id);
+              setView('edit');
+            }}
+            onAdd={() => setView('add')}
+          />
+        )}
+
+        {view === 'edit' && (
+          <RuleForm
+            mode="edit"
+            ruleId={editId || undefined}
+            onBack={() => setView('list')}
+          />
+        )}
+
+        {view === 'add' && (
+          <RuleForm mode="add" onBack={() => setView('list')} />
+        )}
       </div>
     </div>
   );
