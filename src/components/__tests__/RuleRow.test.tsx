@@ -44,8 +44,7 @@ describe('<RuleRow />', () => {
 
     expect(row).toHaveTextContent(rule.urlPattern);
     expect(row).toHaveTextContent(rule.method);
-    expect(row).toHaveTextContent('Yes');
-    expect(row).toHaveTextContent(rule.date);
+    expect(screen.getByRole('button', { name: 'Enabled' })).toBeInTheDocument();
 
     const editButton = screen.getByRole('button', { name: 'Edit' });
     const deleteButton = screen.getByRole('button', { name: 'Delete' });

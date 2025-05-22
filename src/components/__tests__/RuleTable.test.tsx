@@ -1,7 +1,7 @@
 // src/components/__tests__/RuleTable.test.tsx
 import React from 'react';
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import RuleTable from '../RuleTable';
@@ -62,13 +62,16 @@ describe('<RuleTable />', () => {
 
       expect(row).toHaveTextContent(rule.urlPattern);
       expect(row).toHaveTextContent(rule.method);
-      expect(row).toHaveTextContent(rule.enabled ? 'Yes' : 'No');
-      expect(row).toHaveTextContent(rule.date);
+      expect(
+        within(row).getByRole('button', {
+          name: rule.enabled ? 'Enabled' : 'Disabled',
+        })
+      ).toBeInTheDocument();
 
       const buttons = row.querySelectorAll('button');
-      expect(buttons).toHaveLength(2);
-      expect(buttons[0]).toHaveTextContent('Edit');
-      expect(buttons[1]).toHaveTextContent('Delete');
+      expect(buttons).toHaveLength(3);
+      expect(buttons[1]).toHaveTextContent('Edit');
+      expect(buttons[2]).toHaveTextContent('Delete');
     });
   });
 

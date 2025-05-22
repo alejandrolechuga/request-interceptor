@@ -24,7 +24,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ filter = '', onEdit }) => {
           {COLUMN_ORDER.map((column) => (
             <th
               key={column}
-              className="border-b px-2 py-1 font-semibold text-red-600"
+              className="border-b px-2 py-1 text-left font-semibold text-red-600"
             >
               {COLUMN_LABELS[column]}
             </th>
