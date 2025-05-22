@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setEnableRuleset } from '../../store/settingsSlice';
 import { addRule } from '../../Panel/ruleset/rulesetSlice';
+import { RuntimeMessage } from '../../types/messages';
 
 import './app.css';
 import RuleTable from '../../components/RuleTable';
@@ -13,6 +14,13 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const enableRuleset = useAppSelector((state) => state.settings.enableRuleset);
   const rules = useAppSelector((state) => state.ruleset);
+
+  useEffect(() => {
+    chrome.runtime.sendMessage({
+      action: RuntimeMessage.SETTINGS_UPDATE,
+      settings: { enableRuleset },
+    });
+  }, [enableRuleset]);
 
   // Temporary: preload mock rules into the store once
   useEffect(() => {
