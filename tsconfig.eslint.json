@@ -14,7 +14,7 @@
     "jest.setup.ts", // Your Jest setup file
     "__mocks__/**/*.ts", // Your mock files
     "tailwind.config.ts",
-    "postcss.config.ts",
+    "postcss.config.ts"
     // Add any other .ts files at the root or other locations if needed
   ],
   "exclude": [
