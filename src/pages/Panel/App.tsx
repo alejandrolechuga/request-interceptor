@@ -23,14 +23,14 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen space-y-4 bg-zinc-800 p-4 text-white">
-      <h1 className="text-2xl font-bold">Dev Tools Panel</h1>
+      <h1 className="text-2xl font-bold">Override Response Tool</h1>
       <label className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={enableRuleset}
           onChange={(e) => dispatch(setEnableRuleset(e.target.checked))}
         />
-        Enable rules
+        Apply Rules
       </label>
       <Filter value={filter} onFilterChange={setFilter} />
       <div data-testid="app-container">
