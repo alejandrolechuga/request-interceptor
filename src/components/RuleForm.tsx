@@ -39,7 +39,9 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
         })
       );
     } else if (mode === 'edit' && ruleId) {
-      dispatch(updateRule({ id: ruleId, changes: { urlPattern, method, enabled } }));
+      dispatch(
+        updateRule({ id: ruleId, changes: { urlPattern, method, enabled } })
+      );
     }
     onBack();
   };
@@ -81,7 +83,11 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
         <button type="submit" className="rounded bg-blue-600 px-2 py-1">
           Save
         </button>
-        <button type="button" onClick={onBack} className="rounded bg-gray-600 px-2 py-1">
+        <button
+          type="button"
+          onClick={onBack}
+          className="rounded bg-gray-600 px-2 py-1"
+        >
           Back
         </button>
       </div>

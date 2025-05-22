@@ -5,11 +5,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import RuleForm from '../RuleForm';
 import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
 import settingsReducer from '../../store/settingsSlice';
+import { Rule } from '../../../src/types/rule';
 
-const renderForm = (mode: 'add' | 'edit', preloadedRules = []) => {
+const renderForm = (mode: 'add' | 'edit', preloadedRules: Rule[] = []) => {
   const store = configureStore({
     reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-    preloadedState: { settings: { enableRuleset: false }, ruleset: preloadedRules },
+    preloadedState: {
+      settings: { enableRuleset: false },
+      ruleset: preloadedRules,
+    },
   });
 
   const onBack = jest.fn();
