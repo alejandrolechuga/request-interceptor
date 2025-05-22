@@ -91,17 +91,8 @@ const options: MyWebpackConfiguration = {
         ],
       },
       {
-        test: /\.(css|scss)$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: new RegExp('\\.(' + fileExtensions.join('|') + ')$'),

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 
 import Newtab from './Newtab';
 import './index.css';
+import '../../styles/globals.css';
 
 const container = document.getElementById('app-container');
 if (container) {

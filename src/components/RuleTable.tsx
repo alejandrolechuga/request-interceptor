@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import './style.css';
 import RuleRow from './RuleRow';
 import { useAppSelector } from '../store';
 import { COLUMN_ORDER, COLUMN_LABELS, RuleColumn } from './columnConfig';
@@ -18,11 +17,14 @@ const RuleTable: React.FC<RuleTableProps> = ({ filter = '' }) => {
   }, [filter, rules]);
 
   return (
-    <table>
+    <table className="w-full table-auto border-collapse text-sm">
       <thead>
         <tr>
           {COLUMN_ORDER.map((column) => (
-            <th key={column} className="header">
+            <th
+              key={column}
+              className="border-b px-2 py-1 font-semibold text-red-600"
+            >
               {COLUMN_LABELS[column]}
             </th>
           ))}
@@ -35,7 +37,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ filter = '' }) => {
           ))
         ) : (
           <tr>
-            <td colSpan={COLUMN_ORDER.length} style={{ textAlign: 'center' }}>
+            <td colSpan={COLUMN_ORDER.length} className="py-4 text-center">
               No rules available
             </td>
           </tr>
