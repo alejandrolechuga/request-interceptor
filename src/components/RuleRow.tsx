@@ -2,7 +2,8 @@ import React from 'react';
 import type { Rule } from '../types/rule';
 import { RuleColumn } from './columnConfig';
 import { useAppDispatch } from '../store';
-import { removeRule } from '../Panel/ruleset/rulesetSlice';
+import { removeRule, updateRule } from '../Panel/ruleset/rulesetSlice';
+import ToggleButton from './ToggleButton';
 
 interface RuleRowProps {
   rule: Rule;
@@ -26,9 +27,16 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
       case RuleColumn.Method:
         return rule.method;
       case RuleColumn.Enabled:
-        return rule.enabled ? 'Yes' : 'No';
-      case RuleColumn.Date:
-        return rule.date;
+        return (
+          <ToggleButton
+            isEnabled={rule.enabled}
+            onToggle={() =>
+              dispatch(
+                updateRule({ id: rule.id, changes: { enabled: !rule.enabled } })
+              )
+            }
+          />
+        );
       case RuleColumn.Actions:
       default:
         return (

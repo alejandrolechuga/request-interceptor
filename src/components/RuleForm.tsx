@@ -17,12 +17,14 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const [urlPattern, setUrlPattern] = useState('');
   const [method, setMethod] = useState('GET');
   const [enabled, setEnabled] = useState(true);
+  const [response, setResponse] = useState('');
 
   useEffect(() => {
     if (mode === 'edit' && existing) {
       setUrlPattern(existing.urlPattern);
       setMethod(existing.method);
       setEnabled(existing.enabled);
+      setResponse(existing.response || '');
     }
   }, [existing, mode]);
 
@@ -35,12 +37,15 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           method,
           enabled,
           date: new Date().toISOString().split('T')[0],
-          response: null,
+          response,
         })
       );
     } else if (mode === 'edit' && ruleId) {
       dispatch(
-        updateRule({ id: ruleId, changes: { urlPattern, method, enabled } })
+        updateRule({
+          id: ruleId,
+          changes: { urlPattern, method, enabled, response },
+        })
       );
     }
     onBack();
@@ -63,12 +68,17 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
         </label>
         <label className="flex flex-col">
           <span>Method</span>
-          <input
-            type="text"
+          <select
             value={method}
             onChange={(e) => setMethod(e.target.value)}
             className="rounded border border-gray-300 px-2 py-1 text-black"
-          />
+          >
+            {['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="flex items-center gap-2">
           <input
@@ -77,6 +87,15 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
             onChange={(e) => setEnabled(e.target.checked)}
           />
           Enabled
+        </label>
+        <label className="flex flex-col">
+          <span>Response Body</span>
+          <textarea
+            rows={4}
+            value={response}
+            onChange={(e) => setResponse(e.target.value)}
+            className="rounded border border-gray-300 px-2 py-1 text-black"
+          />
         </label>
       </div>
       <div className="space-x-2">
