@@ -60,7 +60,7 @@ describe('<App />', () => {
         <App />
       </Provider>
     );
-    const checkbox = screen.getByLabelText('Enable rules');
+    const checkbox = screen.getByLabelText('Apply Rules');
     expect(checkbox).not.toBeChecked();
     fireEvent.click(checkbox);
     expect(checkbox).toBeChecked();
