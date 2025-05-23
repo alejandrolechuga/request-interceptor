@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setEnableRuleset } from '../../store/settingsSlice';
-import { addRule } from '../../Panel/ruleset/rulesetSlice';
 
 import RuleList from '../../components/RuleList';
 import RuleForm from '../../components/RuleForm';
-import mockData from '../../mocks/rules.json';
 
 type ViewState = 'list' | 'edit' | 'add';
 
@@ -14,15 +12,6 @@ const App: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const enableRuleset = useAppSelector((state) => state.settings.enableRuleset);
-  const rules = useAppSelector((state) => state.ruleset);
-
-  // Temporary: preload mock rules into the store once
-  useEffect(() => {
-    if (rules.length === 0) {
-      mockData.forEach(({ id: _ignored, ...data }) => dispatch(addRule(data)));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="min-h-screen space-y-4 bg-zinc-800 p-4 text-white">
