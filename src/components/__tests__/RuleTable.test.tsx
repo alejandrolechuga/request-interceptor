@@ -9,7 +9,7 @@ import type { Rule } from '../../types/rule';
 import { COLUMN_ORDER, COLUMN_LABELS } from '../columnConfig';
 import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
 import settingsReducer from '../../store/settingsSlice';
-import mockRules from '../../mocks/rules.json';
+import mockRules from '../../__mocks__/rules.json';
 
 describe('<RuleTable />', () => {
   const renderRuleTable = (rules: Rule[] = [], onEdit = jest.fn()) => {

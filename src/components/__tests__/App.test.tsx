@@ -2,11 +2,21 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import App from '../../pages/Panel/App';
 import { Provider } from 'react-redux';
-import { store } from '../../store';
-import mockData from '../../mocks/rules.json';
+import { configureStore } from '@reduxjs/toolkit';
+import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
+import settingsReducer from '../../store/settingsSlice';
+import type { Rule } from '../../types/rule';
+import mockData from '../../__mocks__/rules.json';
+
+const createStore = (rules: Rule[] = mockData) =>
+  configureStore({
+    reducer: { settings: settingsReducer, ruleset: rulesetReducer },
+    preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
+  });
 
 describe('<App />', () => {
   it('renders the app container', () => {
+    const store = createStore();
     render(
       <Provider store={store}>
         <App />
@@ -18,6 +28,7 @@ describe('<App />', () => {
 
   it('filters rules based on url', () => {
     jest.useFakeTimers();
+    const store = createStore();
     render(
       <Provider store={store}>
         <App />
@@ -39,6 +50,7 @@ describe('<App />', () => {
   });
 
   it('clears the filter and shows all rules', () => {
+    const store = createStore();
     render(
       <Provider store={store}>
         <App />
@@ -55,6 +67,7 @@ describe('<App />', () => {
   });
 
   it('toggles enable rules checkbox', () => {
+    const store = createStore();
     render(
       <Provider store={store}>
         <App />
