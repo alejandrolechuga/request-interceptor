@@ -17,6 +17,12 @@ describe('store persistence', () => {
           set: setMock,
         },
       },
+      tabs: {
+        sendMessage: jest.fn(),
+      },
+      devtools: {
+        inspectedWindow: { tabId: 1 },
+      },
     };
     return { setMock };
   }
