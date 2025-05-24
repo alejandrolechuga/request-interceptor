@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import settingsReducer, { setEnableRuleset } from './settingsSlice';
 import rulesetReducer, { setRules } from '../Panel/ruleset/rulesetSlice';
+import { RuntimeMessage } from '../types/runtimeMessage';
 
 export const store = configureStore({
   reducer: {
@@ -35,11 +36,23 @@ if (typeof chrome !== 'undefined' && chrome.storage?.local) {
   // `previousSettings` and `previousRuleset` track the last values written so
   // we always write the latest state after each dispatch.
   store.subscribe(() => {
-    const { settings, ruleset } = store.getState();
+    const state = store.getState();
+    const { settings, ruleset } = state;
+
     if (previousSettings !== settings || previousRuleset !== ruleset) {
       previousSettings = settings;
       previousRuleset = ruleset;
+
       chrome.storage.local.set({ settings, ruleset });
+
+      if (chrome.tabs && chrome.devtools?.inspectedWindow) {
+        chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
+          action: RuntimeMessage.STATE_UPDATE,
+          state,
+        });
+      } else {
+        console.log('chrome devtools not available, skipping state broadcast');
+      }
     }
   });
 }
