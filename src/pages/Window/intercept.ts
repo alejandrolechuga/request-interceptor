@@ -58,4 +58,54 @@ export const interceptFetch = (
       return response;
     }
   };
+
+  const originalXhrOpen = XMLHttpRequest.prototype.open;
+  const originalXhrSend = XMLHttpRequest.prototype.send;
+
+  XMLHttpRequest.prototype.open = function (
+    method: string,
+    url: string | URL,
+    async?: boolean,
+    user?: string,
+    password?: string
+  ) {
+    (this as any)._interceptRequestMethod = method;
+    (this as any)._interceptRequestUrl = url.toString();
+    return originalXhrOpen.apply(this, [method, url, async, user, password]);
+  };
+
+  XMLHttpRequest.prototype.send = function (...sendArgs: any[]) {
+    const xhr = this;
+    const handleReadyStateChange = function (this: XMLHttpRequest) {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        const requestUrl =
+          (xhr as any)._interceptRequestUrl || xhr.responseURL || '';
+        const matchedRule = ExtensionReceivedState.getState().ruleset.find(
+          (rule) =>
+            rule.enabled &&
+            rule.urlPattern &&
+            requestUrl.includes(rule.urlPattern)
+        );
+        if (matchedRule) {
+          console.log('Matched rule:', matchedRule);
+          const overrideBody = matchedRule.response ?? '{}';
+          Object.defineProperty(xhr, 'responseText', {
+            configurable: true,
+            writable: true,
+            value: overrideBody,
+          });
+          Object.defineProperty(xhr, 'response', {
+            configurable: true,
+            writable: true,
+            value: overrideBody,
+          });
+        } else {
+          console.log('No matching rule found for:', requestUrl);
+        }
+        xhr.removeEventListener('readystatechange', handleReadyStateChange);
+      }
+    };
+    xhr.addEventListener('readystatechange', handleReadyStateChange);
+    return originalXhrSend.apply(this, sendArgs as any);
+  };
 };
