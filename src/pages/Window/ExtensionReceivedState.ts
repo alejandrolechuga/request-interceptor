@@ -1,5 +1,5 @@
-import type { Rule } from '../../../types/rule';
-import { EventBus } from '../../../utils/EventBus';
+import type { Rule } from '../../types/rule';
+import { EventBus } from '../../utils/EventBus';
 
 export interface ExtensionSettings {
   enableRuleset: boolean;
@@ -7,7 +7,7 @@ export interface ExtensionSettings {
 
 export interface ExtensionStateData {
   settings: ExtensionSettings;
-  rules: Rule[];
+  ruleset: Rule[];
 }
 
 export enum ExtensionStateEvents {
@@ -25,7 +25,7 @@ export class ExtensionReceivedState extends EventBus<ExtensionStateEventMap> {
     super();
     this.state = {
       settings: { enableRuleset: false },
-      rules: [],
+      ruleset: [],
       ...initial,
     } as ExtensionStateData;
   }

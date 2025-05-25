@@ -14,7 +14,7 @@ describe('ExtensionReceivedState', () => {
     state.updateState({ settings: { enableRuleset: true } });
     expect(state.getState().settings.enableRuleset).toBe(true);
 
-    const rules = [
+    const ruleset = [
       {
         id: '1',
         urlPattern: '/api',
@@ -24,18 +24,18 @@ describe('ExtensionReceivedState', () => {
         response: null,
       },
     ];
-    state.updateState({ rules });
-    expect(state.getState().rules).toEqual(rules);
+    state.updateState({ ruleset });
+    expect(state.getState().ruleset).toEqual(ruleset);
   });
 
   it('merges updates with existing state', () => {
     const state = new ExtensionReceivedState({
       settings: { enableRuleset: false },
-      rules: [],
+      ruleset: [],
     });
     state.updateState({ settings: { enableRuleset: true } });
     state.updateState({
-      rules: [
+      ruleset: [
         {
           id: '2',
           urlPattern: '/test',

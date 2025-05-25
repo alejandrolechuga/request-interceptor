@@ -51,21 +51,14 @@ const isDevelopment: boolean = process.env.NODE_ENV !== 'production';
 const options: MyWebpackConfiguration = {
   mode: isDevelopment ? 'development' : 'production',
   entry: {
-    newtab: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.tsx'),
-    options: path.join(__dirname, 'src', 'pages', 'Options', 'index.tsx'),
-    popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.tsx'),
+    //newtab: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.tsx'),
+    //options: path.join(__dirname, 'src', 'pages', 'Options', 'index.tsx'),
+    //popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.tsx'),
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.ts'),
     contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.ts'),
     devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.ts'),
     panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.tsx'),
-    intercept: path.join(
-      __dirname,
-      'src',
-      'pages',
-      'Content',
-      'Intercept',
-      'index.ts'
-    ),
+    window: path.join(__dirname, 'src', 'pages', 'Window', 'index.ts'),
   },
   chromeExtensionBoilerplate: {
     // Your custom property
@@ -178,24 +171,6 @@ const options: MyWebpackConfiguration = {
           force: true,
         },
       ],
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Newtab', 'index.html'),
-      filename: 'newtab.html',
-      chunks: ['newtab'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Options', 'index.html'),
-      filename: 'options.html',
-      chunks: ['options'],
-      cache: false,
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'pages', 'Popup', 'index.html'),
-      filename: 'popup.html',
-      chunks: ['popup'],
-      cache: false,
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.html'),

@@ -1,4 +1,4 @@
-import { RequestHandler } from './RequestHandler';
+import { ExtensionReceivedState } from './ExtensionReceivedState';
 
 const originalFetch = window.fetch;
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
@@ -31,26 +31,31 @@ const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   };
 };
 
-export const interceptFetch = (requestHandler: RequestHandler) => {
+export const interceptFetch = (
+  ExtensionReceivedState: ExtensionReceivedState
+) => {
   window.fetch = async (...args: [RequestInfo | URL, RequestInit?]) => {
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
       ...args
     );
     const response = await originalFetch(...args);
     const clonedResponse = response.clone();
-    requestHandler.addRequest({
-      request: {
-        url: requestUrl,
-        method: requestMethod,
-        headers: requestHeaders,
-      },
-      response: {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries()),
-        body: await clonedResponse.text(),
-      },
-    });
-    return response;
+    // override the response body to be a string
+    const matchedRule = ExtensionReceivedState.getState().ruleset.find(
+      (rule) =>
+        rule.enabled && rule.urlPattern && requestUrl.includes(rule.urlPattern)
+    );
+    if (matchedRule) {
+      console.log('Matched rule:', matchedRule);
+      const overrideBody = matchedRule.response ?? '{}';
+      return new Response(overrideBody, {
+        status: clonedResponse.status,
+        statusText: clonedResponse.statusText,
+        headers: clonedResponse.headers,
+      });
+    } else {
+      console.log('No matching rule found for:', requestUrl);
+      return response;
+    }
   };
 };
