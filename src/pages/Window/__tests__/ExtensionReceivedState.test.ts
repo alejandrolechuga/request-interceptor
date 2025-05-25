@@ -5,7 +5,7 @@ describe('ExtensionReceivedState', () => {
     const state = new ExtensionReceivedState();
     expect(state.getState()).toEqual({
       settings: { enableRuleset: false },
-      rules: [],
+      ruleset: [],
     });
   });
 
@@ -48,7 +48,7 @@ describe('ExtensionReceivedState', () => {
     });
     expect(state.getState()).toEqual({
       settings: { enableRuleset: true },
-      rules: [
+      ruleset: [
         {
           id: '2',
           urlPattern: '/test',
