@@ -47,7 +47,8 @@ export const interceptFetch = (
     );
     if (matchedRule) {
       console.log('Matched rule:', matchedRule);
-      const overrideBody = matchedRule.response ?? '{}';
+      const overrideBody =
+        matchedRule.response ?? (await clonedResponse.text());
       return new Response(overrideBody, {
         status: clonedResponse.status,
         statusText: clonedResponse.statusText,
@@ -57,5 +58,63 @@ export const interceptFetch = (
       console.log('No matching rule found for:', requestUrl);
       return response;
     }
+  };
+
+  const originalXhrOpen = XMLHttpRequest.prototype.open;
+  const originalXhrSend = XMLHttpRequest.prototype.send;
+
+  interface PatchedXhr extends XMLHttpRequest {
+    _interceptRequestMethod?: string;
+    _interceptRequestUrl?: string;
+  }
+
+  const DONE = (XMLHttpRequest as any).DONE ?? 4;
+
+  XMLHttpRequest.prototype.open = function (
+    method: string,
+    url: string | URL,
+    async?: boolean,
+    user?: string,
+    password?: string
+  ) {
+    const xhr = this as PatchedXhr;
+    xhr._interceptRequestMethod = method;
+    xhr._interceptRequestUrl = url.toString();
+    return originalXhrOpen.apply(this, [method, url, async, user, password]);
+  };
+
+  XMLHttpRequest.prototype.send = function (...sendArgs: any[]) {
+    const xhr = this as PatchedXhr;
+    const handleReadyStateChange = function (this: XMLHttpRequest) {
+      if (xhr.readyState === DONE) {
+        const requestUrl =
+          xhr._interceptRequestUrl || xhr.responseURL || '';
+        const matchedRule = ExtensionReceivedState.getState().ruleset.find(
+          (rule) =>
+            rule.enabled &&
+            rule.urlPattern &&
+            requestUrl.includes(rule.urlPattern)
+        );
+        if (matchedRule) {
+          console.log('Matched rule:', matchedRule);
+          const overrideBody = matchedRule.response ?? xhr.responseText;
+          Object.defineProperty(xhr, 'responseText', {
+            configurable: true,
+            writable: true,
+            value: overrideBody,
+          });
+          Object.defineProperty(xhr, 'response', {
+            configurable: true,
+            writable: true,
+            value: overrideBody,
+          });
+        } else {
+          console.log('No matching rule found for:', requestUrl);
+        }
+        xhr.removeEventListener('readystatechange', handleReadyStateChange);
+      }
+    };
+    xhr.addEventListener('readystatechange', handleReadyStateChange);
+    return originalXhrSend.apply(this, sendArgs as any);
   };
 };
