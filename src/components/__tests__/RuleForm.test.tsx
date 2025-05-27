@@ -28,6 +28,12 @@ const renderForm = (mode: 'add' | 'edit', preloadedRules: Rule[] = []) => {
 };
 
 describe('<RuleForm />', () => {
+  it('defaults method to empty value in add mode', () => {
+    renderForm('add');
+    expect((screen.getByLabelText(/method/i) as HTMLSelectElement).value).toBe(
+      ''
+    );
+  });
   it('adds a rule when submitted in add mode', () => {
     const { store } = renderForm('add');
 
