@@ -2,7 +2,7 @@ import type { Rule } from '../../types/rule';
 import { EventBus } from '../../utils/EventBus';
 
 export interface ExtensionSettings {
-  enableRuleset: boolean;
+  patched: boolean;
 }
 
 export interface ExtensionStateData {
@@ -24,7 +24,7 @@ export class ExtensionReceivedState extends EventBus<ExtensionStateEventMap> {
   constructor(initial?: Partial<ExtensionStateData>) {
     super();
     this.state = {
-      settings: { enableRuleset: false },
+      settings: { patched: false },
       ruleset: [],
       ...initial,
     } as ExtensionStateData;
@@ -36,6 +36,8 @@ export class ExtensionReceivedState extends EventBus<ExtensionStateEventMap> {
 
   public updateState(update: Partial<ExtensionStateData>): void {
     this.state = { ...this.state, ...update };
+    sessionStorage.setItem('settings', JSON.stringify(this.state.settings));
+    sessionStorage.setItem('ruleset', JSON.stringify(this.state.ruleset));
     this.emit(ExtensionStateEvents.STATE_UPDATED, this.state);
   }
 }

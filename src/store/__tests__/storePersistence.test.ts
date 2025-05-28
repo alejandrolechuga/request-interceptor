@@ -1,4 +1,4 @@
-import { setEnableRuleset } from '../settingsSlice';
+import { setPatched } from '../settingsSlice';
 import { addRule } from '../../Panel/ruleset/rulesetSlice';
 
 describe('store persistence', () => {
@@ -29,7 +29,7 @@ describe('store persistence', () => {
 
   it('loads persisted data on init', async () => {
     const stored = {
-      settings: { enableRuleset: true },
+      settings: { patched: true },
       ruleset: [
         {
           id: '1',
@@ -43,18 +43,18 @@ describe('store persistence', () => {
     };
     createChromeMocks(stored);
     const { store } = await import('../index');
-    expect(store.getState().settings.enableRuleset).toBe(true);
+    expect(store.getState().settings.patched).toBe(true);
     expect(store.getState().ruleset).toEqual(stored.ruleset);
   });
 
   it('persists updates to chrome.storage.local', async () => {
-    const stored = { settings: { enableRuleset: false }, ruleset: [] };
+    const stored = { settings: { patched: false }, ruleset: [] };
     const { setMock } = createChromeMocks(stored);
     const { store } = await import('../index');
 
-    store.dispatch(setEnableRuleset(true));
+    store.dispatch(setPatched(true));
     expect(setMock).toHaveBeenLastCalledWith({
-      settings: { enableRuleset: true },
+      settings: { patched: true },
       ruleset: [],
     });
 
@@ -69,7 +69,7 @@ describe('store persistence', () => {
       })
     );
     expect(setMock).toHaveBeenLastCalledWith({
-      settings: { enableRuleset: true },
+      settings: { patched: true },
       ruleset: expect.any(Array),
     });
     const lastCall = setMock.mock.calls[setMock.mock.calls.length - 1][0];

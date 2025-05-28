@@ -22,7 +22,7 @@ describe('<RuleRow />', () => {
   const renderRow = (rules: Rule[] = [rule], onEdit = jest.fn()) => {
     const store = configureStore({
       reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-      preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
+      preloadedState: { settings: { patched: false }, ruleset: rules },
     });
     render(
       <Provider store={store}>

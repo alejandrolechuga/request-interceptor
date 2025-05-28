@@ -1,4 +1,4 @@
-import { interceptFetch } from './intercept';
+import { initialize, loadSession, update } from './intercept';
 import {
   listenContentScriptMessages,
   postMessage,
@@ -13,15 +13,14 @@ import {
   ExtensionMessageOrigin,
 } from '../../types/runtimeMessage';
 export const setup = () => {
-  const extensionStateReceiver = new ExtensionReceivedState();
-  extensionStateReceiver.on(
-    ExtensionStateEvents.STATE_UPDATED,
-    (updatedState) => {
-      if (updatedState) {
-        console.log('[setup] ExtensionReceivedState updated:', updatedState);
-      }
-    }
-  );
+  const stored = loadSession();
+  const extensionStateReceiver = new ExtensionReceivedState({
+    settings: { patched: stored.patched },
+    ruleset: stored.ruleset,
+  });
+  extensionStateReceiver.on(ExtensionStateEvents.STATE_UPDATED, () => {
+    update(extensionStateReceiver);
+  });
   postMessage({
     action: ExtensionMessageType.RECEIVER_READY,
   });
@@ -34,5 +33,5 @@ export const setup = () => {
       } as Partial<ExtensionStateData>);
     }
   });
-  interceptFetch(extensionStateReceiver);
+  initialize(extensionStateReceiver);
 };
