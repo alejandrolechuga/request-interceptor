@@ -65,6 +65,7 @@ describe('store persistence', () => {
         enabled: true,
         date: '',
         response: null,
+        statusCode: 200,
       })
     );
     expect(setMock).toHaveBeenLastCalledWith({

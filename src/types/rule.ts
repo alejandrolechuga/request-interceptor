@@ -3,6 +3,7 @@ export interface Rule {
   urlPattern: string;
   method: string;
   enabled: boolean;
+  statusCode: number;
   date: string;
   response: string | null;
 }
