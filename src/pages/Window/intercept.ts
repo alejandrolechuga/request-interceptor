@@ -41,16 +41,27 @@ export const applyRule = (
   rule: Rule,
   response: Response
 ) => {
-  if (
-    rule.enabled &&
-    rule.urlPattern &&
-    params.requestUrl.includes(rule.urlPattern)
-  ) {
-    const overrideBody = rule.response ?? '{}';
+  const isEnabled = rule.enabled;
+  const hasUrlPattern = !!rule.urlPattern;
+  const urlMatches = params.requestUrl.includes(rule.urlPattern);
+  const methodMatches =
+    !rule.method ||
+    rule.method.toUpperCase() === params.requestMethod.toUpperCase();
+
+  if (isEnabled && hasUrlPattern && urlMatches && methodMatches) {
+    const originalBody = response ? response.body : undefined;
+    const overrideBody = rule.response ? rule.response : originalBody;
+    // Use rule.statusCode if present, otherwise fallback to response.status
+    const overrideStatus =
+      typeof rule.statusCode === 'number'
+        ? rule.statusCode
+        : response
+          ? response.status
+          : 200;
     return new Response(overrideBody, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
+      status: overrideStatus,
+      statusText: response ? response.statusText : '',
+      headers: response ? response.headers : undefined,
     });
   }
   return undefined;
