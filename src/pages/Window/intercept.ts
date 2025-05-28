@@ -1,6 +1,7 @@
 import { ExtensionReceivedState } from './ExtensionReceivedState';
+import { getOriginalFetch, setGlobalFetch } from '../../utils/globalFetch';
+import type { Rule } from '../../types/rule';
 
-const originalFetch = window.fetch;
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   const requestInput: RequestInfo | URL = args[0];
   const requestInit: RequestInit | undefined = args[1];
@@ -31,31 +32,50 @@ const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   };
 };
 
+export const applyRule = (
+  params: {
+    requestUrl: string;
+    requestMethod: string;
+    requestHeaders: Record<string, string>;
+  },
+  rule: Rule,
+  response: Response
+) => {
+  if (
+    rule.enabled &&
+    rule.urlPattern &&
+    params.requestUrl.includes(rule.urlPattern)
+  ) {
+    const overrideBody = rule.response ?? '{}';
+    return new Response(overrideBody, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
+  }
+  return undefined;
+};
+
 export const interceptFetch = (
   ExtensionReceivedState: ExtensionReceivedState
 ) => {
-  window.fetch = async (...args: [RequestInfo | URL, RequestInit?]) => {
+  setGlobalFetch(async (...args: [RequestInfo | URL, RequestInit?]) => {
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
       ...args
     );
-    const response = await originalFetch(...args);
+    const response = await getOriginalFetch()(...args);
     const clonedResponse = response.clone();
-    // override the response body to be a string
-    const matchedRule = ExtensionReceivedState.getState().ruleset.find(
-      (rule) =>
-        rule.enabled && rule.urlPattern && requestUrl.includes(rule.urlPattern)
-    );
-    if (matchedRule) {
-      console.log('Matched rule:', matchedRule);
-      const overrideBody = matchedRule.response ?? '{}';
-      return new Response(overrideBody, {
-        status: clonedResponse.status,
-        statusText: clonedResponse.statusText,
-        headers: clonedResponse.headers,
-      });
-    } else {
-      console.log('No matching rule found for:', requestUrl);
-      return response;
+    const rules = ExtensionReceivedState.getState().ruleset;
+    for (const rule of rules) {
+      const overridden = applyRule(
+        { requestUrl, requestMethod, requestHeaders },
+        rule,
+        clonedResponse
+      );
+      if (overridden) {
+        return overridden;
+      }
     }
-  };
+    return response;
+  });
 };
