@@ -1,6 +1,7 @@
 import { ExtensionReceivedState } from './ExtensionReceivedState';
+import { getOriginalFetch, setGlobalFetch } from '../../utils/globalFetch';
+import type { Rule } from '../../types/rule';
 
-const originalFetch = window.fetch;
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   const requestInput: RequestInfo | URL = args[0];
   const requestInit: RequestInit | undefined = args[1];
@@ -31,32 +32,61 @@ const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   };
 };
 
+export const applyRule = (
+  params: {
+    requestUrl: string;
+    requestMethod: string;
+    requestHeaders: Record<string, string>;
+  },
+  rule: Rule,
+  response: Response
+) => {
+  const isEnabled = rule.enabled;
+  const hasUrlPattern = !!rule.urlPattern;
+  const urlMatches = params.requestUrl.includes(rule.urlPattern);
+  const methodMatches =
+    !rule.method ||
+    rule.method.toUpperCase() === params.requestMethod.toUpperCase();
+
+  if (isEnabled && hasUrlPattern && urlMatches && methodMatches) {
+    const originalBody = response ? response.body : undefined;
+    const overrideBody = rule.response ? rule.response : originalBody;
+    // Use rule.statusCode if present, otherwise fallback to response.status
+    const overrideStatus =
+      typeof rule.statusCode === 'number'
+        ? rule.statusCode
+        : response
+          ? response.status
+          : 200;
+    return new Response(overrideBody, {
+      status: overrideStatus,
+      statusText: response ? response.statusText : '',
+      headers: response ? response.headers : undefined,
+    });
+  }
+  return undefined;
+};
+
 export const interceptFetch = (
   ExtensionReceivedState: ExtensionReceivedState
 ) => {
-  window.fetch = async (...args: [RequestInfo | URL, RequestInit?]) => {
+  setGlobalFetch(async (...args: [RequestInfo | URL, RequestInit?]) => {
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
       ...args
     );
-    const response = await originalFetch(...args);
+    const response = await getOriginalFetch()(...args);
     const clonedResponse = response.clone();
-    // override the response body to be a string
-    const matchedRule = ExtensionReceivedState.getState().ruleset.find(
-      (rule) =>
-        rule.enabled && rule.urlPattern && requestUrl.includes(rule.urlPattern)
-    );
-    if (matchedRule) {
-      console.log('Matched rule:', matchedRule);
-      const overrideBody = matchedRule.response ?? '{}';
-      const overrideStatus = matchedRule.statusCode ?? clonedResponse.status;
-      return new Response(overrideBody, {
-        status: overrideStatus,
-        statusText: clonedResponse.statusText,
-        headers: clonedResponse.headers,
-      });
-    } else {
-      console.log('No matching rule found for:', requestUrl);
-      return response;
+    const rules = ExtensionReceivedState.getState().ruleset;
+    for (const rule of rules) {
+      const overridden = applyRule(
+        { requestUrl, requestMethod, requestHeaders },
+        rule,
+        clonedResponse
+      );
+      if (overridden) {
+        return overridden;
+      }
     }
-  };
+    return response;
+  });
 };
