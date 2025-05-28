@@ -1,22 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SettingsState {
-  enableRuleset: boolean;
+  patched: boolean;
 }
 
 const initialState: SettingsState = {
-  enableRuleset: false,
+  patched: false,
 };
 
 const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setEnableRuleset(state, action: PayloadAction<boolean>) {
-      state.enableRuleset = action.payload;
+    setPatched(state, action: PayloadAction<boolean>) {
+      state.patched = action.payload;
     },
   },
 });
 
-export const { setEnableRuleset } = settingsSlice.actions;
+export const { setPatched } = settingsSlice.actions;
 export default settingsSlice.reducer;
