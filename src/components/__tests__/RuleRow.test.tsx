@@ -13,6 +13,7 @@ const rule: Rule = {
   urlPattern: 'https://api.example.com/*',
   method: 'GET',
   enabled: true,
+  statusCode: 200,
   date: '2024-01-01',
   response: null,
 };

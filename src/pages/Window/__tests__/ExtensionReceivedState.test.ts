@@ -22,9 +22,11 @@ describe('ExtensionReceivedState', () => {
         enabled: true,
         date: '',
         response: null,
+        statusCode: 200,
       },
     ];
     state.updateState({ ruleset });
+    console.log(state.getState());
     expect(state.getState().ruleset).toEqual(ruleset);
   });
 
@@ -43,6 +45,7 @@ describe('ExtensionReceivedState', () => {
           enabled: false,
           date: '',
           response: null,
+          statusCode: 200,
         },
       ],
     });
@@ -56,6 +59,7 @@ describe('ExtensionReceivedState', () => {
           enabled: false,
           date: '',
           response: null,
+          statusCode: 200,
         },
       ],
     });
