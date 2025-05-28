@@ -3,9 +3,16 @@ import React from 'react';
 export type ToggleButtonProps = {
   isEnabled: boolean;
   onToggle: () => void;
+  enabledLabel?: string;
+  disabledLabel?: string;
 };
 
-const ToggleButton: React.FC<ToggleButtonProps> = ({ isEnabled, onToggle }) => (
+const ToggleButton: React.FC<ToggleButtonProps> = ({
+  isEnabled,
+  onToggle,
+  enabledLabel = 'Enabled',
+  disabledLabel = 'Disabled',
+}) => (
   <button
     type="button"
     onClick={onToggle}
@@ -15,7 +22,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({ isEnabled, onToggle }) => (
         : 'bg-gray-500 text-white hover:bg-gray-600'
     }`}
   >
-    {isEnabled ? 'Enabled' : 'Disabled'}
+    {isEnabled ? enabledLabel : disabledLabel}
   </button>
 );
 

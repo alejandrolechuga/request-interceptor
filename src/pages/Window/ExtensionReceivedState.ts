@@ -2,7 +2,7 @@ import type { Rule } from '../../types/rule';
 import { EventBus } from '../../utils/EventBus';
 
 export interface ExtensionSettings {
-  enableRuleset: boolean;
+  patched: boolean;
 }
 
 export interface ExtensionStateData {
@@ -24,7 +24,7 @@ export class ExtensionReceivedState extends EventBus<ExtensionStateEventMap> {
   constructor(initial?: Partial<ExtensionStateData>) {
     super();
     this.state = {
-      settings: { enableRuleset: false },
+      settings: { patched: false },
       ruleset: [],
       ...initial,
     } as ExtensionStateData;

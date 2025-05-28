@@ -1,4 +1,7 @@
-import { ExtensionReceivedState } from './ExtensionReceivedState';
+import {
+  ExtensionReceivedState,
+  ExtensionStateEvents,
+} from './ExtensionReceivedState';
 import { getOriginalFetch, setGlobalFetch } from '../../utils/globalFetch';
 import type { Rule } from '../../types/rule';
 
@@ -70,7 +73,11 @@ export const applyRule = (
 export const interceptFetch = (
   ExtensionReceivedState: ExtensionReceivedState
 ) => {
-  setGlobalFetch(async (...args: [RequestInfo | URL, RequestInit?]) => {
+  let isPatched = false;
+
+  const interceptedFetch = async (
+    ...args: [RequestInfo | URL, RequestInit?]
+  ) => {
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
       ...args
     );
@@ -88,5 +95,27 @@ export const interceptFetch = (
       }
     }
     return response;
-  });
+  };
+
+  const patch = () => {
+    setGlobalFetch(interceptedFetch as typeof fetch);
+    isPatched = true;
+  };
+
+  const restore = () => {
+    setGlobalFetch(getOriginalFetch());
+    isPatched = false;
+  };
+
+  const update = () => {
+    const shouldPatch = ExtensionReceivedState.getState().settings.patched;
+    if (shouldPatch && !isPatched) {
+      patch();
+    } else if (!shouldPatch && isPatched) {
+      restore();
+    }
+  };
+
+  update();
+  ExtensionReceivedState.on(ExtensionStateEvents.STATE_UPDATED, update);
 };

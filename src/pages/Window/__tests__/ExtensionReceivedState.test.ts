@@ -4,15 +4,15 @@ describe('ExtensionReceivedState', () => {
   it('provides default state when no initial state is given', () => {
     const state = new ExtensionReceivedState();
     expect(state.getState()).toEqual({
-      settings: { enableRuleset: false },
+      settings: { patched: false },
       ruleset: [],
     });
   });
 
   it('allows updating and retrieving the state', () => {
     const state = new ExtensionReceivedState();
-    state.updateState({ settings: { enableRuleset: true } });
-    expect(state.getState().settings.enableRuleset).toBe(true);
+    state.updateState({ settings: { patched: true } });
+    expect(state.getState().settings.patched).toBe(true);
 
     const ruleset = [
       {
@@ -32,10 +32,10 @@ describe('ExtensionReceivedState', () => {
 
   it('merges updates with existing state', () => {
     const state = new ExtensionReceivedState({
-      settings: { enableRuleset: false },
+      settings: { patched: false },
       ruleset: [],
     });
-    state.updateState({ settings: { enableRuleset: true } });
+    state.updateState({ settings: { patched: true } });
     state.updateState({
       ruleset: [
         {
@@ -50,7 +50,7 @@ describe('ExtensionReceivedState', () => {
       ],
     });
     expect(state.getState()).toEqual({
-      settings: { enableRuleset: true },
+      settings: { patched: true },
       ruleset: [
         {
           id: '2',
