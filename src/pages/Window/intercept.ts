@@ -90,3 +90,58 @@ export const interceptFetch = (
     return response;
   });
 };
+
+let patched = false;
+
+export const isPatched = () => patched;
+
+export const patch = (state: ExtensionReceivedState) => {
+  if (patched) return;
+  interceptFetch(state);
+  patched = true;
+  sessionStorage.setItem('patched', 'true');
+};
+
+export const unpatch = () => {
+  if (!patched) return;
+  setGlobalFetch(getOriginalFetch());
+  patched = false;
+  sessionStorage.setItem('patched', 'false');
+};
+
+export const loadSession = (): { patched: boolean; ruleset: Rule[] } => {
+  const storedPatched = sessionStorage.getItem('patched');
+  const storedRules = sessionStorage.getItem('ruleset');
+  let ruleset: Rule[] = [];
+  if (storedRules) {
+    try {
+      ruleset = JSON.parse(storedRules) as Rule[];
+    } catch {
+      ruleset = [];
+    }
+  }
+  return { patched: storedPatched === 'true', ruleset };
+};
+
+export const update = (state: ExtensionReceivedState) => {
+  const {
+    settings: { enableRuleset },
+    ruleset,
+  } = state.getState();
+  sessionStorage.setItem('ruleset', JSON.stringify(ruleset));
+  if (enableRuleset) {
+    patch(state);
+  } else {
+    unpatch();
+  }
+};
+
+export const initialize = (state: ExtensionReceivedState) => {
+  const { patched: wasPatched, ruleset } = loadSession();
+  if (ruleset.length) {
+    state.updateState({ ruleset });
+  }
+  if (wasPatched) {
+    patch(state);
+  }
+};

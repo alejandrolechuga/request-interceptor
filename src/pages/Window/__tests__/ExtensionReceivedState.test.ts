@@ -64,4 +64,28 @@ describe('ExtensionReceivedState', () => {
       ],
     });
   });
+
+  it('persists state to sessionStorage on update', () => {
+    sessionStorage.clear();
+    const state = new ExtensionReceivedState();
+    state.updateState({ settings: { enableRuleset: true } });
+    state.updateState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/persist',
+          method: 'GET',
+          enabled: true,
+          date: '',
+          response: null,
+          statusCode: 200,
+        },
+      ],
+    });
+    expect(sessionStorage.getItem('settings')).toBe(
+      JSON.stringify({ enableRuleset: true })
+    );
+    const storedRules = JSON.parse(sessionStorage.getItem('ruleset') || '[]');
+    expect(storedRules).toHaveLength(1);
+  });
 });

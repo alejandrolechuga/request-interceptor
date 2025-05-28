@@ -36,6 +36,8 @@ export class ExtensionReceivedState extends EventBus<ExtensionStateEventMap> {
 
   public updateState(update: Partial<ExtensionStateData>): void {
     this.state = { ...this.state, ...update };
+    sessionStorage.setItem('settings', JSON.stringify(this.state.settings));
+    sessionStorage.setItem('ruleset', JSON.stringify(this.state.ruleset));
     this.emit(ExtensionStateEvents.STATE_UPDATED, this.state);
   }
 }
