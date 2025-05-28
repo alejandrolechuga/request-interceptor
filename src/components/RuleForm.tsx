@@ -55,6 +55,8 @@ interface OverrideFieldsProps {
   setEnabled: (value: boolean) => void;
   response: string;
   setResponse: (value: string) => void;
+  statusCode: number;
+  setStatusCode: (value: number) => void;
 }
 
 const OverrideFields: React.FC<OverrideFieldsProps> = ({
@@ -62,6 +64,8 @@ const OverrideFields: React.FC<OverrideFieldsProps> = ({
   setEnabled,
   response,
   setResponse,
+  statusCode,
+  setStatusCode,
 }) => (
   <fieldset className="flex flex-col gap-2 rounded border p-2">
     <legend className="text-sm font-semibold">Override</legend>
@@ -83,6 +87,15 @@ const OverrideFields: React.FC<OverrideFieldsProps> = ({
         className="rounded border border-gray-300 px-2 py-1 text-black"
       />
     </label>
+    <label className="flex flex-col">
+      <span>Status Code</span>
+      <input
+        type="number"
+        value={statusCode}
+        onChange={(e) => setStatusCode(Number(e.target.value))}
+        className="rounded border border-gray-300 px-2 py-1 text-black"
+      />
+    </label>
   </fieldset>
 );
 
@@ -96,6 +109,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const [method, setMethod] = useState('');
   const [enabled, setEnabled] = useState(true);
   const [response, setResponse] = useState('');
+  const [statusCode, setStatusCode] = useState(200);
 
   useEffect(() => {
     if (mode === 'edit' && existing) {
@@ -103,6 +117,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       setMethod(existing.method);
       setEnabled(existing.enabled);
       setResponse(existing.response || '');
+      setStatusCode(existing.statusCode ?? 200);
     }
   }, [existing, mode]);
 
@@ -116,13 +131,14 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           enabled,
           date: new Date().toISOString().split('T')[0],
           response,
+          statusCode,
         })
       );
     } else if (mode === 'edit' && ruleId) {
       dispatch(
         updateRule({
           id: ruleId,
-          changes: { urlPattern, method, enabled, response },
+          changes: { urlPattern, method, enabled, response, statusCode },
         })
       );
     }
@@ -146,6 +162,8 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           setEnabled={setEnabled}
           response={response}
           setResponse={setResponse}
+          statusCode={statusCode}
+          setStatusCode={setStatusCode}
         />
       </div>
       <div className="space-x-2">

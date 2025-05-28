@@ -48,8 +48,9 @@ export const interceptFetch = (
     if (matchedRule) {
       console.log('Matched rule:', matchedRule);
       const overrideBody = matchedRule.response ?? '{}';
+      const overrideStatus = matchedRule.statusCode ?? clonedResponse.status;
       return new Response(overrideBody, {
-        status: clonedResponse.status,
+        status: overrideStatus,
         statusText: clonedResponse.statusText,
         headers: clonedResponse.headers,
       });
