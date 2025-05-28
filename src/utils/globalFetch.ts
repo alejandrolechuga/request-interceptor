@@ -5,4 +5,3 @@ export const setGlobalFetch = (fn: typeof fetch) => {
   window.fetch = fn;
 };
 export const getGlobalFetch = () => window.fetch;
-
