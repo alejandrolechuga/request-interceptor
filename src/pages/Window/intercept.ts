@@ -1,5 +1,12 @@
 import { ExtensionReceivedState } from './ExtensionReceivedState';
-import { getOriginalFetch, setGlobalFetch } from '../../utils/globalFetch';
+import {
+  getOriginalFetch,
+  setGlobalFetch,
+} from '../../utils/globalFetch';
+import {
+  getOriginalXMLHttpRequest,
+  setGlobalXMLHttpRequest,
+} from '../../utils/globalXMLHttpRequest';
 import type { Rule } from '../../types/rule';
 
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
@@ -89,4 +96,65 @@ export const interceptFetch = (
     }
     return response;
   });
+
+  const OriginalXHR = getOriginalXMLHttpRequest();
+
+  class InterceptedXHR extends OriginalXHR {
+    private _method = '';
+    private _url = '';
+    private _headers: Record<string, string> = {};
+
+    open(
+      method: string,
+      url: string,
+      async?: boolean,
+      username?: string | null,
+      password?: string | null
+    ) {
+      this._method = method;
+      this._url = url;
+      return super.open(
+        method,
+        url,
+        async ?? true,
+        username ?? null,
+        password ?? null
+      );
+    }
+
+    override setRequestHeader(name: string, value: string) {
+      this._headers[name] = value;
+      return super.setRequestHeader(name, value);
+    }
+
+    send(body?: Document | XMLHttpRequestBodyInit | null) {
+      const handleLoad = async () => {
+        const rules = ExtensionReceivedState.getState().ruleset;
+        let response = new Response(this.response);
+        for (const rule of rules) {
+          const overridden = applyRule(
+            {
+              requestUrl: this._url,
+              requestMethod: this._method,
+              requestHeaders: this._headers,
+            },
+            rule,
+            response
+          );
+          if (overridden) {
+            const text = await overridden.text();
+            Object.defineProperty(this, 'response', { value: text });
+            Object.defineProperty(this, 'responseText', { value: text });
+            Object.defineProperty(this, 'status', { value: overridden.status });
+            break;
+          }
+        }
+      };
+
+      this.addEventListener('load', handleLoad);
+      return super.send(body);
+    }
+  }
+
+  setGlobalXMLHttpRequest(InterceptedXHR as typeof XMLHttpRequest);
 };
