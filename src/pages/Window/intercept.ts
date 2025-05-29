@@ -1,6 +1,8 @@
 import { ExtensionReceivedState } from './ExtensionReceivedState';
 import { getOriginalFetch, setGlobalFetch } from '../../utils/globalFetch';
 import type { Rule } from '../../types/rule';
+import { postMessage } from './contentScriptMessage';
+import { ExtensionMessageType } from '../../types/runtimeMessage';
 
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   const requestInput: RequestInfo | URL = args[0];
@@ -93,6 +95,10 @@ export const interceptFetch = (
         clonedResponse
       );
       if (overridden) {
+        postMessage({
+          action: ExtensionMessageType.RULE_MATCHED,
+          ruleId: rule.id,
+        });
         return overridden;
       }
     }
