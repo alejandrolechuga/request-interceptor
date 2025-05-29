@@ -53,4 +53,31 @@ describe('<RuleForm />', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
     expect(onBack).toHaveBeenCalled();
   });
+
+  it('shows an error for invalid RegExp patterns', () => {
+    const { store } = renderForm('add');
+
+    fireEvent.change(screen.getByLabelText(/url pattern/i), {
+      target: { value: '(' },
+    });
+    fireEvent.click(screen.getByLabelText(/treat as regexp/i));
+
+    expect(screen.getByText(/invalid regexp pattern/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+    expect(store.getState().ruleset).toHaveLength(0);
+  });
+
+  it('saves a rule when a valid RegExp is provided', () => {
+    const { store } = renderForm('add');
+
+    fireEvent.change(screen.getByLabelText(/url pattern/i), {
+      target: { value: '^/api' },
+    });
+    fireEvent.click(screen.getByLabelText(/treat as regexp/i));
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    const added = store.getState().ruleset[0];
+    expect(added.isRegExp).toBe(true);
+    expect(added.urlPattern).toBe('^/api');
+  });
 });

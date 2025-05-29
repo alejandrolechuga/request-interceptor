@@ -3,7 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Rule } from '../../types/rule';
 
 type RuleUpdate = Partial<
-  Pick<Rule, 'urlPattern' | 'method' | 'enabled' | 'response' | 'statusCode'>
+  Pick<
+    Rule,
+    'urlPattern' | 'method' | 'enabled' | 'response' | 'statusCode' | 'isRegExp'
+  >
 >;
 
 const initialState: Rule[] = [];

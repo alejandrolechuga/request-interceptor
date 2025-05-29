@@ -18,6 +18,7 @@ describe('ExtensionReceivedState', () => {
       {
         id: '1',
         urlPattern: '/api',
+        isRegExp: false,
         method: 'GET',
         enabled: true,
         date: '',
@@ -41,6 +42,7 @@ describe('ExtensionReceivedState', () => {
         {
           id: '2',
           urlPattern: '/test',
+          isRegExp: false,
           method: 'POST',
           enabled: false,
           date: '',
@@ -55,6 +57,7 @@ describe('ExtensionReceivedState', () => {
         {
           id: '2',
           urlPattern: '/test',
+          isRegExp: false,
           method: 'POST',
           enabled: false,
           date: '',
@@ -74,6 +77,7 @@ describe('ExtensionReceivedState', () => {
         {
           id: '1',
           urlPattern: '/persist',
+          isRegExp: false,
           method: 'GET',
           enabled: true,
           date: '',

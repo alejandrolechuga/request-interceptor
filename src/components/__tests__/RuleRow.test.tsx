@@ -11,6 +11,7 @@ import settingsReducer from '../../store/settingsSlice';
 const rule: Rule = {
   id: '1',
   urlPattern: 'https://api.example.com/*',
+  isRegExp: false,
   method: 'GET',
   enabled: true,
   statusCode: 200,

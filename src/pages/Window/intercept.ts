@@ -43,7 +43,16 @@ export const applyRule = (
 ) => {
   const isEnabled = rule.enabled;
   const hasUrlPattern = !!rule.urlPattern;
-  const urlMatches = params.requestUrl.includes(rule.urlPattern);
+  let urlMatches = false;
+  if (rule.isRegExp) {
+    try {
+      urlMatches = new RegExp(rule.urlPattern).test(params.requestUrl);
+    } catch {
+      urlMatches = false;
+    }
+  } else {
+    urlMatches = params.requestUrl.includes(rule.urlPattern);
+  }
   const methodMatches =
     !rule.method ||
     rule.method.toUpperCase() === params.requestMethod.toUpperCase();

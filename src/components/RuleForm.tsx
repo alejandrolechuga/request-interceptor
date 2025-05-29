@@ -12,6 +12,9 @@ interface RuleFormProps {
 interface MatchingFieldsProps {
   urlPattern: string;
   setUrlPattern: (value: string) => void;
+  isRegExp: boolean;
+  setIsRegExp: (value: boolean) => void;
+  patternError: string | null;
   method: string;
   setMethod: (value: string) => void;
 }
@@ -19,6 +22,9 @@ interface MatchingFieldsProps {
 const MatchingFields: React.FC<MatchingFieldsProps> = ({
   urlPattern,
   setUrlPattern,
+  isRegExp,
+  setIsRegExp,
+  patternError,
   method,
   setMethod,
 }) => (
@@ -32,6 +38,17 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
         onChange={(e) => setUrlPattern(e.target.value)}
         className="rounded border border-gray-300 px-2 py-1 text-black"
       />
+      {patternError && (
+        <span className="text-sm text-red-500">{patternError}</span>
+      )}
+    </label>
+    <label className="flex items-center gap-2">
+      <input
+        type="checkbox"
+        checked={isRegExp}
+        onChange={(e) => setIsRegExp(e.target.checked)}
+      />
+      Treat as RegExp
     </label>
     <label className="flex flex-col">
       <span>Method</span>
@@ -95,14 +112,17 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   );
 
   const [urlPattern, setUrlPattern] = useState('');
+  const [isRegExp, setIsRegExp] = useState(false);
   const [method, setMethod] = useState('');
   const [enabled, setEnabled] = useState(true);
   const [response, setResponse] = useState('');
   const [statusCode, setStatusCode] = useState(200);
+  const [patternError, setPatternError] = useState<string | null>(null);
 
   useEffect(() => {
     if (mode === 'edit' && existing) {
       setUrlPattern(existing.urlPattern);
+      setIsRegExp(existing.isRegExp ?? false);
       setMethod(existing.method);
       setEnabled(existing.enabled);
       setResponse(existing.response || '');
@@ -110,12 +130,35 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     }
   }, [existing, mode]);
 
+  const isValidRegExp = (pattern: string): boolean => {
+    try {
+      new RegExp(pattern);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (isRegExp) {
+      setPatternError(
+        isValidRegExp(urlPattern) ? null : 'Invalid RegExp pattern'
+      );
+    } else {
+      setPatternError(null);
+    }
+  }, [isRegExp, urlPattern]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (patternError) {
+      return;
+    }
     if (mode === 'add') {
       dispatch(
         addRule({
           urlPattern,
+          isRegExp,
           method,
           enabled,
           date: new Date().toISOString().split('T')[0],
@@ -127,7 +170,14 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       dispatch(
         updateRule({
           id: ruleId,
-          changes: { urlPattern, method, enabled, response, statusCode },
+          changes: {
+            urlPattern,
+            isRegExp,
+            method,
+            enabled,
+            response,
+            statusCode,
+          },
         })
       );
     }
@@ -143,6 +193,9 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
         <MatchingFields
           urlPattern={urlPattern}
           setUrlPattern={setUrlPattern}
+          isRegExp={isRegExp}
+          setIsRegExp={setIsRegExp}
+          patternError={patternError}
           method={method}
           setMethod={setMethod}
         />
@@ -155,7 +208,11 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
         />
       </div>
       <div className="space-x-2">
-        <button type="submit" className="rounded bg-blue-600 px-2 py-1">
+        <button
+          type="submit"
+          className="rounded bg-blue-600 px-2 py-1"
+          disabled={!!patternError}
+        >
           Save
         </button>
         <button

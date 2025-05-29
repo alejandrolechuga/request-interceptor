@@ -2,6 +2,7 @@
   {
     "id": "1",
     "urlPattern": "https://api.example.com/*",
+    "isRegExp": false,
     "method": "GET",
     "enabled": true,
     "statusCode": 200,
@@ -11,6 +12,7 @@
   {
     "id": "2",
     "urlPattern": "https://static.example.com/*",
+    "isRegExp": false,
     "method": "POST",
     "enabled": false,
     "statusCode": 200,
@@ -20,6 +22,7 @@
   {
     "id": "3",
     "urlPattern": "https://service.example.com/info",
+    "isRegExp": false,
     "method": "PUT",
     "enabled": true,
     "statusCode": 200,
@@ -29,6 +32,7 @@
   {
     "id": "4",
     "urlPattern": "https://jsonplaceholder.typicode.com/todos/1",
+    "isRegExp": false,
     "method": "GET",
     "enabled": true,
     "statusCode": 200,
