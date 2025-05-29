@@ -8,10 +8,14 @@ export const listenInjectedScript = () => {
     // Process messages coming from the injected script
     if (event.data.from === ExtensionMessageOrigin.RECEIVER) {
       console.log('[FORWARD-FROM-RECEIVER-TO-DEVTOOLS]', event.data);
-      this.chrome.runtime.sendMessage({
-        source: ExtensionMessageOrigin.CONTENT_SCRIPT,
-        payload: event.data,
-      });
+      try {
+        this.chrome.runtime.sendMessage({
+          source: ExtensionMessageOrigin.CONTENT_SCRIPT,
+          payload: event.data,
+        });
+      } catch (error) {
+        console.error('[Content] Failed to forward message', error);
+      }
     }
   });
 };
