@@ -47,14 +47,14 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
             <button
               type="button"
               onClick={handleEdit}
-              className="mr-2 rounded bg-blue-600 px-2 py-1"
+              className="mr-2 rounded bg-blue-500 px-2 py-1"
             >
               Edit
             </button>
             <button
               type="button"
               onClick={handleDelete}
-              className="rounded bg-red-600 px-2 py-1"
+              className="rounded bg-red-500 px-2 py-1"
             >
               Delete
             </button>
