@@ -137,6 +137,7 @@ export const update = (state: ExtensionReceivedState) => {
 };
 
 export const initialize = (state: ExtensionReceivedState) => {
+  console.log('Initializing intercept...');
   const { patched: wasPatched, ruleset } = loadSession();
   if (ruleset.length) {
     state.updateState({ ruleset });
