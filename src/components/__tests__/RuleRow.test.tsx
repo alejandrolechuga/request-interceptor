@@ -71,4 +71,11 @@ describe('<RuleRow />', () => {
 
     expect(onEdit).toHaveBeenCalledWith(rule.id);
   });
+
+  it('shows "Match All" when no method is set', () => {
+    const noMethod = { ...rule, method: '' };
+    renderRow([noMethod]);
+    const row = screen.getByRole('row');
+    expect(row).toHaveTextContent('Match All');
+  });
 });
