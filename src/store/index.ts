@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import settingsReducer, { setPatched } from './settingsSlice';
 import rulesetReducer, { setRules } from '../Panel/ruleset/rulesetSlice';
+import matchesReducer, { incrementMatch } from './matchSlice';
 import {
   ExtensionMessageType,
   ExtensionMessageOrigin,
@@ -17,6 +18,7 @@ export const store = configureStore({
   reducer: {
     settings: settingsReducer,
     ruleset: rulesetReducer,
+    matches: matchesReducer,
   },
 });
 
@@ -80,3 +82,11 @@ export const emitExtensionState = async () => {
     console.log('chrome devtools not available, skipping state broadcast');
   }
 };
+
+if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.payload?.action === ExtensionMessageType.RULE_MATCHED) {
+      store.dispatch(incrementMatch(message.payload.ruleId));
+    }
+  });
+}
