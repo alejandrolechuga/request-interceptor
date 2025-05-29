@@ -10,7 +10,11 @@ export const postMessage = <T extends PostMessagePayload>(payload: T) => {
     from: ExtensionMessageOrigin.RECEIVER,
     ...payload,
   };
-  window.postMessage(message, '*');
+  try {
+    window.postMessage(message, '*');
+  } catch (error) {
+    console.error('Error posting message:', error);
+  }
 };
 
 export const listenContentScriptMessages = (
