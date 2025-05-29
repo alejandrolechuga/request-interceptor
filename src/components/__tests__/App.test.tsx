@@ -11,7 +11,7 @@ import mockData from '../../__mocks__/rules.json';
 const createStore = (rules: Rule[] = mockData) =>
   configureStore({
     reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-    preloadedState: { settings: { enableRuleset: false }, ruleset: rules },
+    preloadedState: { settings: { patched: false }, ruleset: rules },
   });
 
 describe('<App />', () => {
@@ -66,16 +66,17 @@ describe('<App />', () => {
     expect(rows).toHaveLength(mockData.length + 1);
   });
 
-  it('toggles enable rules checkbox', () => {
+  it('toggles interception button', () => {
     const store = createStore();
     render(
       <Provider store={store}>
         <App />
       </Provider>
     );
-    const checkbox = screen.getByLabelText('Apply Rules');
-    expect(checkbox).not.toBeChecked();
-    fireEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    const button = screen.getByRole('button', { name: 'Enable Interception' });
+    fireEvent.click(button);
+    expect(
+      screen.getByRole('button', { name: 'Interception Enabled' })
+    ).toBeInTheDocument();
   });
 });

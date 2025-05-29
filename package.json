@@ -16,6 +16,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "build": "ts-node --project tsconfig.scripts.json utils/build.ts",
+    "build:dev": "ts-node --project tsconfig.scripts.json utils/build.ts --dev",
     "start": "ts-node --project tsconfig.scripts.json utils/webserver.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",

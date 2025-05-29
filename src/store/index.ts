@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import settingsReducer, { setEnableRuleset } from './settingsSlice';
+import settingsReducer, { setPatched } from './settingsSlice';
 import rulesetReducer, { setRules } from '../Panel/ruleset/rulesetSlice';
 import {
   ExtensionMessageType,
@@ -30,7 +30,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 // chrome.storage.local so the store reflects the last saved state.
 safeGetStorageLocal(['settings', 'ruleset']).then(({ settings, ruleset }) => {
   if (settings) {
-    store.dispatch(setEnableRuleset(settings.enableRuleset));
+    store.dispatch(setPatched(settings.patched));
   }
   if (ruleset) {
     store.dispatch(setRules(ruleset));

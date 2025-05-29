@@ -4,34 +4,46 @@
 import webpack, { Configuration, Stats } from 'webpack';
 import path from 'path';
 import fs from 'fs';
-import config from '../webpack.config';
+import configImport from '../webpack.config';
 import ZipPlugin from 'zip-webpack-plugin';
 import packageInfo from '../package.json' assert { type: 'json' };
 
-process.env.BABEL_ENV = 'production';
-process.env.NODE_ENV = 'production';
-process.env.ASSET_PATH = '/';
+// Support both function and object exports from webpack.config
+const config =
+  typeof configImport === 'function' ? configImport() : configImport;
 
+// Remove chromeExtensionBoilerplate if present
 if ('chromeExtensionBoilerplate' in config) {
   delete (config as { chromeExtensionBoilerplate?: unknown })
     .chromeExtensionBoilerplate;
 }
 
-config.mode = 'production';
+// Check for --dev flag
+const isDev = process.argv.includes('--dev');
 
-// Ensure infrastructureLogging.level is set to a valid value
-if (config.infrastructureLogging) {
-  config.infrastructureLogging.level = 'info' as const;
+if (!isDev) {
+  console.log('Building for production...');
+  process.env.BABEL_ENV = 'production';
+  process.env.NODE_ENV = 'production';
+  process.env.ASSET_PATH = '/';
+  config.mode = 'production';
+  // Ensure infrastructureLogging.level is set to a valid value
+  if (config.infrastructureLogging) {
+    config.infrastructureLogging.level = 'info' as const;
+  }
+  config.plugins = (config.plugins || []).concat(
+    new ZipPlugin({
+      filename: `${packageInfo.name}-${packageInfo.version}.zip`,
+      path: path.join(__dirname, '../', 'zip'),
+    })
+  );
+} else {
+  console.log('Building for development...');
+  process.env.BABEL_ENV = 'development';
+  process.env.NODE_ENV = 'development';
+  config.mode = 'development';
+  // Optionally adjust other dev-specific config here
 }
-
-// const packageInfo = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-
-config.plugins = (config.plugins || []).concat(
-  new ZipPlugin({
-    filename: `${packageInfo.name}-${packageInfo.version}.zip`,
-    path: path.join(__dirname, '../', 'zip'),
-  })
-);
 
 webpack(config as Configuration, (err?: Error, stats?: Stats) => {
   if (err) throw err;

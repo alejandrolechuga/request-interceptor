@@ -11,7 +11,7 @@ const renderForm = (mode: 'add' | 'edit', preloadedRules: Rule[] = []) => {
   const store = configureStore({
     reducer: { settings: settingsReducer, ruleset: rulesetReducer },
     preloadedState: {
-      settings: { enableRuleset: false },
+      settings: { patched: false },
       ruleset: preloadedRules,
     },
   });

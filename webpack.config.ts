@@ -62,7 +62,14 @@ const options: MyWebpackConfiguration = {
   },
   chromeExtensionBoilerplate: {
     // Your custom property
-    notHotReload: ['background', 'contentScript', 'devtools'],
+    notHotReload: [
+      'background',
+      'contentScript',
+      'devtools',
+      'window',
+      'panel',
+      'background',
+    ],
   },
   output: {
     filename: '[name].bundle.js',
