@@ -56,7 +56,7 @@ const Filter: React.FC<FilterProps> = ({ value, onFilterChange }) => {
       <button
         type="button"
         onClick={handleClear}
-        className="rounded bg-red-600 px-2 py-1 text-white"
+        className="rounded bg-red-500 px-2 py-1 text-white"
       >
         Clear
       </button>

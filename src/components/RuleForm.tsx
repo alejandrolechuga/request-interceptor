@@ -210,7 +210,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       <div className="space-x-2">
         <button
           type="submit"
-          className="rounded bg-blue-600 px-2 py-1"
+          className="rounded bg-blue-500 px-2 py-1"
           disabled={!!patternError}
         >
           Save
