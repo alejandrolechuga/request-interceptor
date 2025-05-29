@@ -2,7 +2,15 @@
 
 export function safeSendMessage(tabId: number, message: any) {
   if (typeof chrome !== 'undefined' && chrome.tabs && chrome.tabs.sendMessage) {
-    chrome.tabs.sendMessage(tabId, message);
+    try {
+      chrome.tabs.sendMessage(tabId, message);
+    } catch (error) {
+      console.error('[chromeApi] failed to send message', {
+        tabId,
+        message,
+        error,
+      });
+    }
   } else {
     console.error('[chromeApi] chrome.tabs.sendMessage is not available', {
       tabId,
