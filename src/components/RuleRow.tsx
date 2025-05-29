@@ -25,7 +25,7 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
           </p>
         );
       case RuleColumn.Method:
-        return rule.method;
+        return rule.method || 'Match All';
       case RuleColumn.Enabled:
         return (
           <ToggleButton
@@ -44,14 +44,14 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
             <button
               type="button"
               onClick={handleEdit}
-              className="mr-2 text-blue-600 hover:underline"
+              className="mr-2 rounded bg-blue-600 px-2 py-1"
             >
               Edit
             </button>
             <button
               type="button"
               onClick={handleDelete}
-              className="text-red-600 hover:underline"
+              className="rounded bg-red-600 px-2 py-1"
             >
               Delete
             </button>

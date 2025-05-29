@@ -11,7 +11,7 @@ const RuleList: React.FC<RuleListProps> = ({ onEdit, onAdd }) => {
   const [filter, setFilter] = useState('');
   return (
     <div className="space-y-4">
-      <div className="flex justify-between">
+      <div className="flex justify-end gap-2">
         <Filter value={filter} onFilterChange={setFilter} />
         <button
           type="button"

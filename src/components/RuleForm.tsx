@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { addRule, updateRule } from '../Panel/ruleset/rulesetSlice';
+import OptionsFields from './OptionsFields';
 
 interface RuleFormProps {
   mode: 'add' | 'edit';
@@ -51,8 +52,6 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
 );
 
 interface OverrideFieldsProps {
-  enabled: boolean;
-  setEnabled: (value: boolean) => void;
   response: string;
   setResponse: (value: string) => void;
   statusCode: number;
@@ -60,23 +59,13 @@ interface OverrideFieldsProps {
 }
 
 const OverrideFields: React.FC<OverrideFieldsProps> = ({
-  enabled,
-  setEnabled,
   response,
   setResponse,
   statusCode,
   setStatusCode,
 }) => (
   <fieldset className="flex flex-col gap-2 rounded border p-2">
-    <legend className="text-sm font-semibold">Override</legend>
-    <label className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        checked={enabled}
-        onChange={(e) => setEnabled(e.target.checked)}
-      />
-      Enabled
-    </label>
+    <legend className="text-sm font-semibold">Override Response</legend>
     <label className="flex flex-col">
       <span>Response Body</span>
       <textarea
@@ -157,9 +146,8 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           method={method}
           setMethod={setMethod}
         />
+        <OptionsFields enabled={enabled} setEnabled={setEnabled} />
         <OverrideFields
-          enabled={enabled}
-          setEnabled={setEnabled}
           response={response}
           setResponse={setResponse}
           statusCode={statusCode}
