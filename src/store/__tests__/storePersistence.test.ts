@@ -34,6 +34,7 @@ describe('store persistence', () => {
         {
           id: '1',
           urlPattern: '/api',
+          isRegExp: false,
           method: 'GET',
           enabled: true,
           date: '',
@@ -61,6 +62,7 @@ describe('store persistence', () => {
     store.dispatch(
       addRule({
         urlPattern: '/test',
+        isRegExp: false,
         method: 'GET',
         enabled: true,
         date: '',

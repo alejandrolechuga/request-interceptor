@@ -12,6 +12,7 @@ describe('rulesetSlice', () => {
     {
       id: '1',
       urlPattern: 'https://api.example.com/*',
+      isRegExp: false,
       method: 'GET',
       enabled: true,
       statusCode: 200,
@@ -21,6 +22,7 @@ describe('rulesetSlice', () => {
     {
       id: '2',
       urlPattern: 'https://static.example.com/*',
+      isRegExp: false,
       method: 'POST',
       enabled: false,
       statusCode: 200,
@@ -32,6 +34,7 @@ describe('rulesetSlice', () => {
   it('should add a rule', () => {
     const newRule = {
       urlPattern: 'https://new.example.com/*',
+      isRegExp: false,
       method: 'PUT',
       enabled: true,
       statusCode: 200,
@@ -77,6 +80,7 @@ describe('rulesetSlice', () => {
       {
         id: '9',
         urlPattern: 'https://replace.example.com/*',
+        isRegExp: false,
         method: 'GET',
         enabled: false,
         statusCode: 200,

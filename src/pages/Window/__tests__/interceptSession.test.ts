@@ -24,6 +24,7 @@ describe('intercept session persistence', () => {
         {
           id: '1',
           urlPattern: '/persist',
+          isRegExp: false,
           method: 'GET',
           enabled: true,
           date: '',
