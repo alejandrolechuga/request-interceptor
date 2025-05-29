@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Rule } from '../types/rule';
 import { RuleColumn } from './columnConfig';
-import { useAppDispatch } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
 import { removeRule, updateRule } from '../Panel/ruleset/rulesetSlice';
 import ToggleButton from './ToggleButton';
 
@@ -13,6 +13,7 @@ interface RuleRowProps {
 
 const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
   const dispatch = useAppDispatch();
+  const matchCount = useAppSelector((state) => state.matches[rule.id] || 0);
   const handleDelete = () => dispatch(removeRule(rule.id));
   const handleEdit = () => onEdit(rule.id);
 
@@ -37,6 +38,8 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
             }
           />
         );
+      case RuleColumn.Matches:
+        return matchCount;
       case RuleColumn.Actions:
       default:
         return (

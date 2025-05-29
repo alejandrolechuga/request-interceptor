@@ -5,13 +5,22 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
 import settingsReducer from '../../store/settingsSlice';
+import matchesReducer from '../../store/matchSlice';
 import type { Rule } from '../../types/rule';
 import mockData from '../../__mocks__/rules.json';
 
 const createStore = (rules: Rule[] = mockData) =>
   configureStore({
-    reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-    preloadedState: { settings: { patched: false }, ruleset: rules },
+    reducer: {
+      settings: settingsReducer,
+      ruleset: rulesetReducer,
+      matches: matchesReducer,
+    },
+    preloadedState: {
+      settings: { patched: false },
+      ruleset: rules,
+      matches: {},
+    },
   });
 
 describe('<App />', () => {

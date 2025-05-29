@@ -7,6 +7,7 @@ import type { Rule } from '../../types/rule';
 import { COLUMN_ORDER } from '../columnConfig';
 import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
 import settingsReducer from '../../store/settingsSlice';
+import matchesReducer from '../../store/matchSlice';
 
 const rule: Rule = {
   id: '1',
@@ -21,8 +22,16 @@ const rule: Rule = {
 describe('<RuleRow />', () => {
   const renderRow = (rules: Rule[] = [rule], onEdit = jest.fn()) => {
     const store = configureStore({
-      reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-      preloadedState: { settings: { patched: false }, ruleset: rules },
+      reducer: {
+        settings: settingsReducer,
+        ruleset: rulesetReducer,
+        matches: matchesReducer,
+      },
+      preloadedState: {
+        settings: { patched: false },
+        ruleset: rules,
+        matches: {},
+      },
     });
     render(
       <Provider store={store}>

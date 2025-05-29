@@ -9,13 +9,22 @@ import type { Rule } from '../../types/rule';
 import { COLUMN_ORDER, COLUMN_LABELS } from '../columnConfig';
 import rulesetReducer from '../../Panel/ruleset/rulesetSlice';
 import settingsReducer from '../../store/settingsSlice';
+import matchesReducer from '../../store/matchSlice';
 import mockRules from '../../__mocks__/rules.json';
 
 describe('<RuleTable />', () => {
   const renderRuleTable = (rules: Rule[] = [], onEdit = jest.fn()) => {
     const store = configureStore({
-      reducer: { settings: settingsReducer, ruleset: rulesetReducer },
-      preloadedState: { settings: { patched: false }, ruleset: rules },
+      reducer: {
+        settings: settingsReducer,
+        ruleset: rulesetReducer,
+        matches: matchesReducer,
+      },
+      preloadedState: {
+        settings: { patched: false },
+        ruleset: rules,
+        matches: {},
+      },
     });
     render(
       <Provider store={store}>
