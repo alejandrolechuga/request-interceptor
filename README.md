@@ -1,3 +1,6 @@
+## HTTPMocky 
+![image](https://github.com/user-attachments/assets/8c012e8c-eae2-4300-915c-00bf1451ed34)
+
 ## Installing and Running
 
 ### Procedures:
@@ -54,8 +57,6 @@ Generate a coverage report with:
 ```bash
 npm run test:coverage
 ```
-## UI 
-![image](https://github.com/user-attachments/assets/8c012e8c-eae2-4300-915c-00bf1451ed34)
 
 
 ## Commit message guidelines
