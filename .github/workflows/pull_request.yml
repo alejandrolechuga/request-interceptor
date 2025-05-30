@@ -27,6 +27,9 @@ jobs:
       - name: Validate commit messages
         uses: wagoid/commitlint-github-action@v5
 
+      - name: Check for changeset
+        run: npm run check-changeset
+
       - name: Lint
         run: npm run lint:silent
 
