@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Override Response Tool",
+  "name": "HTTPMocky",
   "description": "DevTools panel + content script that rewrites fetch/XHR responses",
   "version": "0.1.0",
   "devtools_page": "devtools.html",

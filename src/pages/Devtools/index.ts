@@ -8,11 +8,7 @@ import {
   safeSendMessage,
 } from '../../../src/chrome';
 
-chrome.devtools.panels.create(
-  'Override Response Tool',
-  'icon-34.png',
-  'panel.html'
-);
+chrome.devtools.panels.create('HTTPMocky', 'icon-34.png', 'panel.html');
 
 chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   if (message.source === ExtensionMessageOrigin.CONTENT_SCRIPT) {
