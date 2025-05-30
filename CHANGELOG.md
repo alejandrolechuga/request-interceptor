@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.3.0
+
+### Minor Changes
+
+- c039c12: only show the filter bar whenever there is more than 10 rows
+
 ## 1.2.0
 
 ### Minor Changes
