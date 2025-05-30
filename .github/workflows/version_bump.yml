@@ -25,11 +25,18 @@ jobs:
       - name: Create version bump
         run: npx changeset version
 
-      - name: Commit and push version bump
+      - name: Use SSH key
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+      - name: Push version bump
+        run: |
+          git config user.name "version-bot"
+          git config user.email "version-bot@local"
           git add .
-          git commit -m "chore: version bump from changeset [skip ci]" || echo "No version bump needed"
-          git push
+          git commit -m "chore: version bump"
+          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
+
