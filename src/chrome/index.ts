@@ -3,7 +3,15 @@
 export function safeSendMessage(tabId: number, message: any) {
   if (typeof chrome !== 'undefined' && chrome.tabs && chrome.tabs.sendMessage) {
     try {
-      chrome.tabs.sendMessage(tabId, message);
+      chrome.tabs.sendMessage(tabId, message, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[chromeApi] Error sending message', {
+            tabId,
+            message,
+            error: chrome.runtime.lastError.message,
+          });
+        }
+      });
     } catch (error) {
       console.error('[chromeApi] failed to send message', {
         tabId,

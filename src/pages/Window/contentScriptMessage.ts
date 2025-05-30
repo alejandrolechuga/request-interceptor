@@ -13,7 +13,7 @@ export const postMessage = <T extends PostMessagePayload>(payload: T) => {
   try {
     window.postMessage(message, '*');
   } catch (error) {
-    console.error('Error posting message:', error);
+    console.log('Error posting message:', error);
   }
 };
 

@@ -9,16 +9,20 @@ export const listenInjectedScript = () => {
     if (event.data.from === ExtensionMessageOrigin.RECEIVER) {
       console.log('[FORWARD-FROM-RECEIVER-TO-DEVTOOLS]', event.data);
       try {
-        const result = this.chrome.runtime.sendMessage({
-          source: ExtensionMessageOrigin.CONTENT_SCRIPT,
-          payload: event.data,
-        });
-        // Uncomment the following lines for debugging purposes
-        // if (result?.catch) {
-        //   result.catch((err) => {
-        //     console.error("[DEBUG] sendMessage failed:", err);
-        //   });
-        // }
+        this.chrome.runtime.sendMessage(
+          {
+            source: ExtensionMessageOrigin.CONTENT_SCRIPT,
+            payload: event.data,
+          },
+          () => {
+            if (chrome.runtime.lastError) {
+              console.warn(
+                '[Content] Error sending message to devtools:',
+                chrome.runtime.lastError
+              );
+            }
+          }
+        );
       } catch (error) {
         console.error('[Content] Failed to forward message', error);
       }
