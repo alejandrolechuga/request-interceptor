@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.2.0
+
+### Minor Changes
+
+- ee0443b: add version to version bump commit
+
 ## 1.1.0
 
 ### Minor Changes
