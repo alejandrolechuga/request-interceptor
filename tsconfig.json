@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "rootDir": "./",
     "outDir": "./build",
     "allowJs": false,
@@ -21,32 +17,13 @@
     "noEmit": false,
     "jsx": "react",
     "baseUrl": "./",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
-    "types": [
-      "jest",
-      "@testing-library/jest-dom",
-      "chrome"
-    ],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["jest", "@testing-library/jest-dom", "chrome"],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "src/types/assets.d.ts",
-    "package.json"
-  ],
-  "files": [
-    "src/types/assets.d.ts",
-    "src/types/zip-webpack-plugin.d.ts"
-  ],
-  "exclude": [
-    "build",
-    "node_modules"
-  ]
+  "include": ["src/**/*", "src/types/assets.d.ts", "package.json"],
+  "files": ["src/types/assets.d.ts", "src/types/zip-webpack-plugin.d.ts"],
+  "exclude": ["build", "node_modules"]
 }
