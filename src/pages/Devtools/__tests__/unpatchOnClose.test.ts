@@ -27,13 +27,17 @@ describe('Devtools unload behavior', () => {
 
     window.dispatchEvent(new Event('beforeunload'));
 
-    expect(sendMessageMock).toHaveBeenCalledWith(1, {
-      action: ExtensionMessageType.STATE_UPDATE,
-      from: ExtensionMessageOrigin.DEVTOOLS,
-      state: {
-        settings: { patched: false },
-        ruleset: [],
-      },
-    });
+    expect(sendMessageMock).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({
+        action: ExtensionMessageType.STATE_UPDATE,
+        from: ExtensionMessageOrigin.DEVTOOLS,
+        state: {
+          settings: { patched: false },
+          ruleset: [],
+        },
+      }),
+      expect.anything()
+    );
   });
 });
