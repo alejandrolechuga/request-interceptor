@@ -1,0 +1,9 @@
+# override-response-tool
+
+## 1.0.2
+
+### Patch Changes
+
+- 2b46add: Convert the changeset check script from JavaScript to TypeScript and adjust the configuration accordingly.
+- bff7b4d: include version bump post-merge
+- 2b46add: package-lock fix, readme update
