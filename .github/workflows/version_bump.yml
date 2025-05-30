@@ -6,6 +6,7 @@ on:
 
 jobs:
   version:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')" 
     runs-on: ubuntu-latest
 
     steps:
@@ -37,5 +38,5 @@ jobs:
           git config user.name "version-bot"
           git config user.email "version-bot@local"
           git add .
-          git commit -m "chore: version bump"
+          git commit -m "chore: version bump [skip ci]"
           git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
