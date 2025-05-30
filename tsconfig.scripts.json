@@ -13,6 +13,7 @@
   },
   "include": [
     "utils/**/*.ts", // Your utility scripts
+    "scripts/**/*.ts",
     "webpack.config.ts" // Your webpack config
     // Add any other .ts scripts that are run directly by Node.js via ts-node
   ],
