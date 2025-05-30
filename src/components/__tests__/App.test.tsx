@@ -9,6 +9,14 @@ import matchesReducer from '../../store/matchSlice';
 import type { Rule } from '../../types/rule';
 import mockData from '../../__mocks__/rules.json';
 
+const manyRules: Rule[] = [
+  ...mockData,
+  ...Array.from({ length: 7 }, (_, i) => ({
+    ...mockData[0],
+    id: `extra-${i}`,
+  })),
+];
+
 const createStore = (rules: Rule[] = mockData) =>
   configureStore({
     reducer: {
@@ -37,7 +45,7 @@ describe('<App />', () => {
 
   it('filters rules based on url', () => {
     jest.useFakeTimers();
-    const store = createStore();
+    const store = createStore(manyRules);
     render(
       <Provider store={store}>
         <App />
@@ -59,7 +67,7 @@ describe('<App />', () => {
   });
 
   it('clears the filter and shows all rules', () => {
-    const store = createStore();
+    const store = createStore(manyRules);
     render(
       <Provider store={store}>
         <App />
@@ -72,7 +80,7 @@ describe('<App />', () => {
     fireEvent.click(clearButton);
 
     const rows = screen.getAllByRole('row');
-    expect(rows).toHaveLength(mockData.length + 1);
+    expect(rows).toHaveLength(manyRules.length + 1);
   });
 
   it('toggles interception button', () => {
