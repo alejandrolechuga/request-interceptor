@@ -36,6 +36,7 @@ jobs:
         run: |
           git config user.name "version-bot"
           git config user.email "version-bot@local"
+          VERSION=$(node -p "require('./package.json').version")
           git add .
-          git commit -m "chore: version bump"
+          git commit -m "chore: version bump $VERSION [skip ci]"
           git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
