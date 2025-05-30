@@ -1,5 +1,5 @@
 ## HTTPMocky
-
+![npm](https://img.shields.io/npm/v/<your-package-name>.svg)
 ![image](https://github.com/user-attachments/assets/8c012e8c-eae2-4300-915c-00bf1451ed34)
 
 ## Installing and Running
