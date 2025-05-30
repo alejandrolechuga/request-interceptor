@@ -28,7 +28,7 @@ jobs:
         uses: wagoid/commitlint-github-action@v5
 
       - name: Check for changeset
-        run: npm run check-changeset
+        run: npm run ci-check-changeset
 
       - name: Lint
         run: npm run lint:silent

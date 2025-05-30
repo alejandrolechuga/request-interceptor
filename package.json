@@ -27,6 +27,7 @@
     "lint:commits": "commitlint --edit",
     "prepare": "husky",
     "check-changeset": "ts-node --project tsconfig.scripts.json scripts/check-changeset.ts",
+    "ci-check-changeset": "ts-node --project tsconfig.scripts.json scripts/ci-check-changeset.ts",
     "changeset": "npx changeset"
   },
   "dependencies": {
