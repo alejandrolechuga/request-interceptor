@@ -1,12 +1,12 @@
 import { execSync } from 'child_process';
-
+const base = process.env.GITHUB_BASE_REF || 'master';
 try {
   // Ensure CI has the latest main branch data
-  execSync('git fetch origin master', { stdio: 'ignore' });
+  execSync(`git fetch origin ${base}`, { stdio: 'ignore' });
 
   // Check if any changeset file was added in the PR diff
   const output = execSync(
-    'git diff --name-only origin/master...HEAD .changeset',
+    `git diff --name-only origin/${base}...HEAD .changeset`,
     { encoding: 'utf8' }
   ).trim();
 
