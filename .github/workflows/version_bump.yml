@@ -39,4 +39,3 @@ jobs:
           git add .
           git commit -m "chore: version bump"
           git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
-
