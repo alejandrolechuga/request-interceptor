@@ -70,13 +70,21 @@ store.subscribe(() => {
 
 export const emitExtensionState = async () => {
   console.log('Emitting initial state to devtools panel');
-  const state = await safeGetStorageLocal(null);
+  const { ruleset, settings } = await safeGetStorageLocal([
+    'ruleset',
+    'settings',
+  ]);
   const inspectedWindow = safeDevtoolsInspectedWindow();
   if (chrome.tabs && inspectedWindow) {
     safeSendMessage(inspectedWindow.tabId, {
       action: ExtensionMessageType.STATE_UPDATE,
       from: ExtensionMessageOrigin.DEVTOOLS,
-      state,
+      state: {
+        ruleset: ruleset ?? [],
+        settings: {
+          patched: settings?.patched ?? false,
+        },
+      },
     });
   } else {
     console.log('chrome devtools not available, skipping state broadcast');
