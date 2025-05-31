@@ -19,4 +19,4 @@ This policy will be updated accordingly, and users will be given the opportunity
 
 Contact
 If you have any questions about this privacy policy or your data, you can contact us at:
-📧 [your-email@example.com]
+📧 [nova.mente.media@gmail.com]
