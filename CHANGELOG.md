@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.4.1
+
+### Patch Changes
+
+- 7e22fe6: fix commit hook on manifest version sync
+
 ## 1.4.0
 
 ### Minor Changes
