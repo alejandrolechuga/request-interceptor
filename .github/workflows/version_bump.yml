@@ -49,5 +49,6 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           git add .
           git commit -m "chore: version bump $VERSION [skip ci]"
-          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
+          git tag "v$VERSION"
+          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master --follow-tags
 
