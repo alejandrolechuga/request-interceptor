@@ -1,5 +1,12 @@
 # override-response-tool
 
+## 1.4.2
+
+### Patch Changes
+
+- 2419911: fix missing bot in github action version bump for manifest sync
+- 2419911: fix commit hook on manifest version sync
+
 ## 1.4.1
 
 ### Patch Changes
