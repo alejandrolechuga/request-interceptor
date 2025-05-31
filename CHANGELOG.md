@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.4.0
+
+### Minor Changes
+
+- 0e51f92: match the manifest version
+
 ## 1.3.0
 
 ### Minor Changes
