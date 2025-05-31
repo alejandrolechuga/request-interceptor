@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.4.3
+
+### Patch Changes
+
+- 71118c6: fix issues with permissions blocking pushing to master
+
 ## 1.4.2
 
 ### Patch Changes
