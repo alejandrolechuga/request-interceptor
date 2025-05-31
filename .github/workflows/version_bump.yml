@@ -57,5 +57,5 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           git add src/manifest.json
-          git commit -m "chore: update manifest version to $VERSION [skip ci]"
+          git commit -m "chore: update manifest version to $VERSION [skip ci]" --no-verify
           git push
