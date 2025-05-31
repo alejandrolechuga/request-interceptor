@@ -32,16 +32,6 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Push version bump
-        run: |
-          git config user.name "version-bot"
-          git config user.email "version-bot@local"
-          VERSION=$(node -p "require('./package.json').version")
-          git add .
-          git commit -m "chore: version bump $VERSION [skip ci]"
-          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
-
       - name: Sync manifest version
         run: |
           node - <<'EOF'
@@ -52,12 +42,12 @@ jobs:
           manifest.version = pkg.version;
           fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
           EOF
-
-      - name: Commit manifest version
+      - name: Push version bump
         run: |
           git config user.name "version-bot"
           git config user.email "version-bot@local"
           VERSION=$(node -p "require('./package.json').version")
-          git add src/manifest.json
-          git commit -m "chore: update manifest version to $VERSION [skip ci]" --no-verify
-          git push
+          git add .
+          git commit -m "chore: version bump $VERSION [skip ci]"
+          git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
+
