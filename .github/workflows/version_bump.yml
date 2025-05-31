@@ -41,3 +41,21 @@ jobs:
           git add .
           git commit -m "chore: version bump $VERSION [skip ci]"
           git push git@github.com:${GITHUB_REPOSITORY}.git HEAD:master
+
+      - name: Sync manifest version
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const pkg = require('./package.json');
+          const manifestPath = './src/manifest.json';
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          manifest.version = pkg.version;
+          fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+          EOF
+
+      - name: Commit manifest version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          git add src/manifest.json
+          git commit -m "chore: update manifest version to $VERSION [skip ci]"
+          git push
