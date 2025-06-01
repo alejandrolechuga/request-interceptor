@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.5.0
+
+### Minor Changes
+
+- 7ac16e5: add tagging to versions
+
 ## 1.4.3
 
 ### Patch Changes
