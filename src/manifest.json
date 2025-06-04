@@ -10,7 +10,7 @@
   "icons": {
     "128": "icon-128.png"
   },
-  "permissions": ["tabs", "storage"],
+  "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
