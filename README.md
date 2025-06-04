@@ -16,6 +16,7 @@ HTTPMocky is a Chrome extension that lets you intercept, inspect, and override f
 - 🔍 Built-in DevTools panel for debugging
 
 🔐 Use cases
+
 - Frontend API mocking and testing
 
 - Simulating slow or failed network responses

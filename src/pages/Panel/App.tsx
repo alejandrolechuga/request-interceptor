@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen space-y-4 bg-zinc-800 p-4 text-white">
-      <h1 className="text-2xl font-bold">Override Response Tool</h1>
+      <h1 className="text-2xl font-bold">HTTPMocky 🐵</h1>
       <InterceptToggleButton
         isEnabled={patched}
         onToggle={() => dispatch(setPatched(!patched))}
