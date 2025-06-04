@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Override Response Tool",
+  "name": "HTTPMocky",
   "description": "DevTools panel + content script that rewrites fetch/XHR responses",
   "version": "1.5.0",
   "devtools_page": "devtools.html",
@@ -10,32 +10,18 @@
   "icons": {
     "128": "icon-128.png"
   },
-  "permissions": [
-    "scripting",
-    "tabs",
-    "storage"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "contentScript.bundle.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.bundle.js"],
       "run_at": "document_start",
       "world": "ISOLATED"
     },
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "window.bundle.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["window.bundle.js"],
       "world": "MAIN",
       "run_at": "document_start"
     }
