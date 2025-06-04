@@ -1,5 +1,12 @@
 # override-response-tool
 
+## 1.5.1
+
+### Patch Changes
+
+- 9daab72: fix using wrong permission in manifest
+- 9daab72: fix having tabs perm
+
 ## 1.5.0
 
 ### Minor Changes
