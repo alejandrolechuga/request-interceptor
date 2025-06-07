@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.5.2
+
+### Patch Changes
+
+- 4406257: fix prod build with wrong paths
+
 ## 1.5.1
 
 ### Patch Changes
