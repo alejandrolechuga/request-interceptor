@@ -8,7 +8,18 @@ import {
   safeSendMessage,
 } from '../../../src/chrome';
 
-chrome.devtools.panels.create('HTTPMocky', 'icon-34.png', 'panel.html');
+if (chrome.devtools?.panels) {
+  chrome.devtools.panels.create(
+    'HTTPMocky',
+    'icon-34.png',
+    'panel.html',
+    () => {
+      console.log('HTTPMocky panel created');
+    }
+  );
+} else {
+  console.error('DevTools panels API is not available');
+}
 
 chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   if (message.source === ExtensionMessageOrigin.CONTENT_SCRIPT) {

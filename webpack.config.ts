@@ -46,8 +46,11 @@ if (fsExtra.existsSync(secretsPath)) {
   alias['secrets'] = secretsPath;
 }
 
-const isDevelopment: boolean = process.env.NODE_ENV !== 'production';
-
+let isDevelopment: boolean = process.env.NODE_ENV !== 'production';
+if (process.argv.includes('--production')) {
+  isDevelopment = false;
+}
+console.log(isDevelopment ? 'Development mode' : 'Production mode');
 const options: MyWebpackConfiguration = {
   mode: isDevelopment ? 'development' : 'production',
   entry: {
@@ -183,12 +186,14 @@ const options: MyWebpackConfiguration = {
       template: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.html'),
       filename: 'devtools.html',
       chunks: ['devtools'],
+      publicPath: '',
       cache: false,
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'pages', 'Panel', 'index.html'),
       filename: 'panel.html',
       chunks: ['panel'],
+      publicPath: '',
       cache: false,
     }),
   ].filter(Boolean) as webpack.WebpackPluginInstance[], // Type assertion for filtered array

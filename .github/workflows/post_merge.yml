@@ -6,34 +6,54 @@ on:
       - master
 
 jobs:
-  build-quality:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+  lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run lint
 
-      - name: Install deps
-        run: npm ci
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run type-check
 
-      - name: Lint
-        run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm test
 
-      - name: type check
-        run: npm run type-check
+  builddev:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run build:dev
 
-      - name: Test
-        run: npm test
-
-      - name: Build
-        run: npm run build
+  build:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run build:prod
