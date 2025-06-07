@@ -19,8 +19,11 @@ if ('chromeExtensionBoilerplate' in config) {
 }
 
 // Check for --dev flag
-const isDev = process.argv.includes('--dev');
-
+let isDev = true;
+if (process.argv.includes('--production')) {
+  isDev = false;
+}
+console.log(process.argv);
 if (!isDev) {
   console.log('Building for production...');
   process.env.BABEL_ENV = 'production';

@@ -2,46 +2,66 @@ name: Pull Request
 
 on: 
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  build-quality:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+  commit-lint:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]   # adjust as needed
-  
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Ensures full history so merge-base can be found
-
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      
-      - name: Install deps
-        run: npm ci
-
-      - name: Validate commit messages
+      - uses: actions/checkout@v4
+      - name: Commit lint
         uses: wagoid/commitlint-github-action@v5
 
-      - name: Check for changeset
-        run: npm run ci-check-changeset
+  changeset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run ci-check-changeset
 
-      - name: Lint
-        run: npm run lint:silent
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run lint:silent
 
-      - name: type check
-        run: npm run type-check
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run type-check
 
-      - name: Test
-        run: npm test
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm test
 
-      - name: Build
-        run: npm run build
-     
+  build-dev:
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+      - run: npm ci
+      - run: npm run build:dev
