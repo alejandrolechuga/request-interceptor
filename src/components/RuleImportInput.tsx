@@ -17,7 +17,10 @@ const RuleImportInput: React.FC<RuleImportInputProps> = ({
     typeof rule.urlPattern === 'string' &&
     typeof rule.method === 'string' &&
     typeof rule.enabled === 'boolean' &&
-    typeof rule.statusCode === 'number';
+    typeof rule.statusCode === 'number' &&
+    (rule.delayMs === undefined ||
+      rule.delayMs === null ||
+      typeof rule.delayMs === 'number');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,6 +41,7 @@ const RuleImportInput: React.FC<RuleImportInputProps> = ({
             statusCode: r.statusCode,
             date: r.date ?? new Date().toISOString().split('T')[0],
             response: r.response ?? null,
+            delayMs: r.delayMs ?? null,
           }));
           onParsed(imported);
         } else {
