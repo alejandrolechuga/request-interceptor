@@ -18,6 +18,7 @@ const rule: Rule = {
   statusCode: 200,
   date: '2024-01-01',
   response: null,
+  delayMs: null,
 };
 
 describe('<RuleRow />', () => {

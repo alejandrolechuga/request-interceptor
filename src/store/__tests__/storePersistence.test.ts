@@ -39,6 +39,7 @@ describe('store persistence', () => {
           enabled: true,
           date: '',
           response: null,
+          delayMs: null,
         },
       ],
     };
@@ -68,6 +69,7 @@ describe('store persistence', () => {
         date: '',
         response: null,
         statusCode: 200,
+        delayMs: null,
       })
     );
     expect(setMock).toHaveBeenLastCalledWith({

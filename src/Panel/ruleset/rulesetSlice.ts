@@ -5,7 +5,13 @@ import type { Rule } from '../../types/rule';
 type RuleUpdate = Partial<
   Pick<
     Rule,
-    'urlPattern' | 'method' | 'enabled' | 'response' | 'statusCode' | 'isRegExp'
+    | 'urlPattern'
+    | 'method'
+    | 'enabled'
+    | 'response'
+    | 'statusCode'
+    | 'isRegExp'
+    | 'delayMs'
   >
 >;
 
