@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch } from '../store';
 import { setRules } from '../Panel/ruleset/rulesetSlice';
 import type { Rule } from '../types/rule';
@@ -14,6 +14,13 @@ const RuleImportExport: React.FC<RuleImportExportProps> = ({ rules }) => {
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState('');
   const [pendingImport, setPendingImport] = useState<Rule[] | null>(null);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const handleImported = (imported: Rule[]) => {
     if (rules.length) {
@@ -42,19 +49,23 @@ const RuleImportExport: React.FC<RuleImportExportProps> = ({ rules }) => {
 
   return (
     <>
-      {message && (
-        <p role="status" className="text-sm text-blue-700">
-          {message}
-        </p>
-      )}
       {pendingImport && (
         <RuleImportConfirm
           onConfirm={handleConfirmImport}
           onCancel={handleCancelImport}
         />
       )}
-      <RuleExportButton rules={rules} onMessage={setMessage} />
-      <RuleImportInput onParsed={handleImported} onError={handleError} />
+      <div className="flex flex-col items-end">
+        <div className="flex gap-2">
+          <RuleExportButton rules={rules} onMessage={setMessage} />
+          <RuleImportInput onParsed={handleImported} onError={handleError} />
+        </div>
+        {message && (
+          <p role="status" className="mt-2 block text-sm text-blue-500">
+            {message}
+          </p>
+        )}
+      </div>
     </>
   );
 };
