@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.7.1
+
+### Patch Changes
+
+- 6b1c4c5: Add floating "Report a Bug" button to the panel UI.
+
 ## 1.7.0
 
 ### Minor Changes
