@@ -8,4 +8,6 @@ export interface Rule {
   statusCode: number;
   date: string;
   response: string | null;
+  /** Optional delay in milliseconds before responding */
+  delayMs?: number | null;
 }

@@ -8,6 +8,8 @@ import type { Rule } from '../../types/rule';
 import { postMessage } from './contentScriptMessage';
 import { ExtensionMessageType } from '../../types/runtimeMessage';
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
   const requestInput: RequestInfo | URL = args[0];
   const requestInit: RequestInit | undefined = args[1];
@@ -126,6 +128,9 @@ export const interceptFetch = (
         clonedResponse
       );
       if (overridden) {
+        if (rule.delayMs !== null && rule.delayMs !== undefined) {
+          await wait(Math.min(10000, rule.delayMs));
+        }
         postMessage({
           action: ExtensionMessageType.RULE_MATCHED,
           ruleId: rule.id,
@@ -163,8 +168,41 @@ export const interceptXhr = (
 
     constructor() {
       super();
-      this.addEventListener('readystatechange', () => {
+    }
+
+    send(body?: Document | BodyInit | null) {
+      const userReady = this.onreadystatechange;
+      const userLoad = this.onload;
+
+      this.onreadystatechange = null;
+      this.onload = null;
+
+      const callBuffered = () => {
+        if (typeof userReady === 'function') {
+          try {
+            userReady.call(
+              this,
+              new Event('readystatechange') as ProgressEvent<EventTarget>
+            );
+          } catch {
+            // ignore
+          }
+        }
+        if (typeof userLoad === 'function') {
+          try {
+            userLoad.call(
+              this,
+              new Event('load') as ProgressEvent<EventTarget>
+            );
+          } catch {
+            // ignore
+          }
+        }
+      };
+
+      const handleDone = () => {
         if (this.readyState === 4) {
+          this.removeEventListener('readystatechange', handleDone);
           const rules = ExtensionReceivedState.getState().ruleset;
           for (const rule of rules) {
             let currentResponse = '';
@@ -191,11 +229,24 @@ export const interceptXhr = (
                 action: ExtensionMessageType.RULE_MATCHED,
                 ruleId: rule.id,
               });
-              break;
+              const delay =
+                rule.delayMs !== null && rule.delayMs !== undefined
+                  ? Math.min(10000, rule.delayMs)
+                  : 0;
+              if (delay > 0) {
+                setTimeout(callBuffered, delay);
+              } else {
+                callBuffered();
+              }
+              return;
             }
           }
+          callBuffered();
         }
-      });
+      };
+
+      this.addEventListener('readystatechange', handleDone);
+      super.send(body as any);
     }
   }
 
