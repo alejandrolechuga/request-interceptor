@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Filter from './Filter';
 import RuleTable from './RuleTable';
 import { useAppSelector } from '../store';
+import RuleImportExport from './RuleImportExport';
 
 interface RuleListProps {
   onEdit: (id: string) => void;
@@ -10,7 +11,9 @@ interface RuleListProps {
 
 const RuleList: React.FC<RuleListProps> = ({ onEdit, onAdd }) => {
   const [filter, setFilter] = useState('');
-  const rulesCount = useAppSelector((state) => state.ruleset.length);
+  const rules = useAppSelector((state) => state.ruleset);
+  const rulesCount = rules.length;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end gap-2">
@@ -24,6 +27,7 @@ const RuleList: React.FC<RuleListProps> = ({ onEdit, onAdd }) => {
         >
           Add Rule
         </button>
+        <RuleImportExport rules={rules} />
       </div>
       <RuleTable filter={filter} onEdit={onEdit} />
     </div>
