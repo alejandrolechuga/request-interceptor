@@ -30,6 +30,7 @@ describe('intercept session persistence', () => {
           date: '',
           response: null,
           statusCode: 200,
+          delayMs: null,
         },
       ] as Rule[],
     });

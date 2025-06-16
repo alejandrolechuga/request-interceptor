@@ -12,6 +12,7 @@ describe('applyXhrRule', () => {
       statusCode: 200,
       date: '',
       response: 'override',
+      delayMs: null,
     };
     const result = applyXhrRule(
       { requestUrl: '/v1/api/test', requestMethod: 'GET' },
@@ -31,6 +32,7 @@ describe('applyXhrRule', () => {
       statusCode: 200,
       date: '',
       response: null,
+      delayMs: null,
     };
     const result = applyXhrRule(
       { requestUrl: '/items/42', requestMethod: 'GET' },
@@ -50,6 +52,7 @@ describe('applyXhrRule', () => {
       statusCode: 200,
       date: '',
       response: null,
+      delayMs: null,
     };
     const result = applyXhrRule(
       { requestUrl: '/test', requestMethod: 'GET' },

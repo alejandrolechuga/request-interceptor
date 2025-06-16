@@ -115,6 +115,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const [isRegExp, setIsRegExp] = useState(false);
   const [method, setMethod] = useState('');
   const [enabled, setEnabled] = useState(true);
+  const [delayMs, setDelayMs] = useState<number | null>(null);
   const [response, setResponse] = useState('');
   const [statusCode, setStatusCode] = useState(200);
   const [patternError, setPatternError] = useState<string | null>(null);
@@ -127,6 +128,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       setEnabled(existing.enabled);
       setResponse(existing.response || '');
       setStatusCode(existing.statusCode ?? 200);
+      setDelayMs(existing.delayMs ?? null);
     }
   }, [existing, mode]);
 
@@ -164,6 +166,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           date: new Date().toISOString().split('T')[0],
           response,
           statusCode,
+          delayMs,
         })
       );
     } else if (mode === 'edit' && ruleId) {
@@ -177,6 +180,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
             enabled,
             response,
             statusCode,
+            delayMs,
           },
         })
       );
@@ -199,7 +203,12 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           method={method}
           setMethod={setMethod}
         />
-        <OptionsFields enabled={enabled} setEnabled={setEnabled} />
+        <OptionsFields
+          enabled={enabled}
+          setEnabled={setEnabled}
+          delayMs={delayMs ?? null}
+          setDelayMs={setDelayMs}
+        />
         <OverrideFields
           response={response}
           setResponse={setResponse}

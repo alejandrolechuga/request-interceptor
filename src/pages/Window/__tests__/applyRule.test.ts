@@ -40,6 +40,7 @@ describe('applyRule', () => {
       statusCode: 201,
       date: '',
       response: 'override',
+      delayMs: null,
     };
     const result = applyRule(
       { requestUrl: '/v1/api/test', requestMethod: 'GET', requestHeaders: {} },
@@ -61,6 +62,7 @@ describe('applyRule', () => {
       statusCode: 200,
       date: '',
       response: null,
+      delayMs: null,
     };
     const result = applyRule(
       { requestUrl: '/items/42', requestMethod: 'GET', requestHeaders: {} },
@@ -80,6 +82,7 @@ describe('applyRule', () => {
       statusCode: 200,
       date: '',
       response: null,
+      delayMs: null,
     };
     const result = applyRule(
       { requestUrl: '/test', requestMethod: 'GET', requestHeaders: {} },

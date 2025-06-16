@@ -18,6 +18,7 @@ describe('rulesetSlice', () => {
       statusCode: 200,
       date: '2024-01-01',
       response: null,
+      delayMs: null,
     },
     {
       id: '2',
@@ -28,6 +29,7 @@ describe('rulesetSlice', () => {
       statusCode: 200,
       date: '2024-02-01',
       response: null,
+      delayMs: null,
     },
   ];
 
@@ -40,6 +42,7 @@ describe('rulesetSlice', () => {
       statusCode: 200,
       date: '2024-03-01',
       response: null,
+      delayMs: null,
     };
     const state = reducer(initialState, addRule(newRule));
     expect(state).toHaveLength(3);
@@ -86,6 +89,7 @@ describe('rulesetSlice', () => {
         statusCode: 200,
         date: '2024-04-01',
         response: null,
+        delayMs: null,
       },
     ];
     const state = reducer(initialState, setRules(replacement));

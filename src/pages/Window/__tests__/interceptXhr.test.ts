@@ -33,6 +33,13 @@ class FakeXMLHttpRequest {
     this.listeners[event].push(cb);
   }
 
+  removeEventListener(event: string, cb: () => void) {
+    const arr = this.listeners[event];
+    if (!arr) return;
+    const idx = arr.indexOf(cb);
+    if (idx !== -1) arr.splice(idx, 1);
+  }
+
   send() {
     this.readyState = 4;
     const handlers = this.listeners['readystatechange'] || [];
@@ -114,6 +121,7 @@ describe('interceptXhr', () => {
           statusCode: 200,
           date: '',
           response: 'override',
+          delayMs: null,
         } as Rule,
       ],
     });
@@ -126,5 +134,39 @@ describe('interceptXhr', () => {
     expect(() => xhr.send()).not.toThrow();
     expect(xhr.responseText).toBe('override');
     expect(xhr.response).toBe('override');
+  });
+
+  it('buffers callbacks until after delay', async () => {
+    jest.useFakeTimers();
+    const { interceptXhr } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/delay',
+          isRegExp: false,
+          method: 'GET',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: 'override',
+          delayMs: 50,
+        } as Rule,
+      ],
+    });
+    interceptXhr(state);
+    const XhrCtor =
+      globalThis.XMLHttpRequest as unknown as typeof FakeXMLHttpRequest;
+    const xhr: any = new XhrCtor();
+    const onload = jest.fn();
+    xhr.onload = onload;
+    xhr.open('GET', '/delay');
+    xhr.simulateResponse('text', 'orig');
+    xhr.send();
+    expect(xhr.responseText).toBe('override');
+    expect(onload).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(50);
+    expect(onload).toHaveBeenCalled();
+    jest.useRealTimers();
   });
 });
