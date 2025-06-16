@@ -1,5 +1,19 @@
 # override-response-tool
 
+## 1.7.0
+
+### Minor Changes
+
+- 066f765: support importing and exporting rules via json
+
+### Patch Changes
+
+- 066f765: append imported rules when importing
+- 066f765: display import/export messages inline
+- 066f765: split RuleImportExport into smaller components
+- 066f765: style import/export status message below buttons with auto-dismiss
+- 066f765: move rule import/export logic into separate component
+
 ## 1.6.0
 
 ### Minor Changes
