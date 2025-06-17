@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.10.0
+
+### Minor Changes
+
+- e6fb593: add feature settings and hide import/export
+
 ## 1.9.1
 
 ### Patch Changes
