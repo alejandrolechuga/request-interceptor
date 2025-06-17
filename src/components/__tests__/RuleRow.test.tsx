@@ -64,13 +64,14 @@ describe('<RuleRow />', () => {
     expect(deleteButton).toBeInTheDocument();
   });
 
-  it('dispatches removeRule when delete button clicked', () => {
+  it('removes rule and its matches when delete button clicked', () => {
     const store = renderRow();
 
     const deleteButton = screen.getByRole('button', { name: 'Delete' });
     fireEvent.click(deleteButton);
 
     expect(store.getState().ruleset).toHaveLength(0);
+    expect(store.getState().matches['1']).toBeUndefined();
   });
 
   it('calls onEdit when edit button clicked', () => {
