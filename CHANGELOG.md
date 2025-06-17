@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.9.0
+
+### Minor Changes
+
+- fda4d06: fix export not including the delay
+
 ## 1.8.0
 
 ### Minor Changes
