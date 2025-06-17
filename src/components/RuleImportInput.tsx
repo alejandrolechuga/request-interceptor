@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import type { Rule } from '../types/rule';
+import { ruleSchema, toRule, type RuleInput } from '../types/ruleSchema';
 
 interface RuleImportInputProps {
   onParsed: (rules: Rule[]) => void;
@@ -13,11 +13,8 @@ const RuleImportInput: React.FC<RuleImportInputProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const validateRule = (rule: Partial<Rule>): rule is Rule =>
-    typeof rule.urlPattern === 'string' &&
-    typeof rule.method === 'string' &&
-    typeof rule.enabled === 'boolean' &&
-    typeof rule.statusCode === 'number';
+  const validateRule = (rule: unknown): rule is RuleInput =>
+    ruleSchema.safeParse(rule).success;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -29,16 +26,7 @@ const RuleImportInput: React.FC<RuleImportInputProps> = ({
       try {
         const json = JSON.parse(reader.result as string);
         if (Array.isArray(json) && json.every(validateRule)) {
-          const imported: Rule[] = json.map((r) => ({
-            id: r.id ?? uuidv4(),
-            urlPattern: r.urlPattern,
-            isRegExp: r.isRegExp ?? false,
-            method: r.method,
-            enabled: r.enabled,
-            statusCode: r.statusCode,
-            date: r.date ?? new Date().toISOString().split('T')[0],
-            response: r.response ?? null,
-          }));
+          const imported: Rule[] = json.map((r) => toRule(r));
           onParsed(imported);
         } else {
           onError('Invalid rules file');
