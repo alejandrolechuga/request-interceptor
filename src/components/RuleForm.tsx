@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store';
 import { addRule, updateRule } from '../Panel/ruleset/rulesetSlice';
 import OptionsFields from './OptionsFields';
@@ -17,6 +18,8 @@ interface MatchingFieldsProps {
   patternError: string | null;
   method: string;
   setMethod: (value: string) => void;
+  urlError?: string;
+  methodError?: string;
 }
 
 const MatchingFields: React.FC<MatchingFieldsProps> = ({
@@ -27,6 +30,8 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
   patternError,
   method,
   setMethod,
+  urlError,
+  methodError,
 }) => (
   <fieldset className="flex flex-col gap-2 rounded border p-2">
     <legend className="text-sm font-semibold">Matching</legend>
@@ -41,6 +46,7 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
       {patternError && (
         <span className="text-sm text-red-500">{patternError}</span>
       )}
+      {urlError && <span className="text-sm text-red-500">{urlError}</span>}
     </label>
     <label className="flex items-center gap-2">
       <input
@@ -64,6 +70,9 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
           </option>
         ))}
       </select>
+      {methodError && (
+        <span className="text-sm text-red-500">{methodError}</span>
+      )}
     </label>
   </fieldset>
 );
@@ -73,6 +82,8 @@ interface OverrideFieldsProps {
   setResponse: (value: string) => void;
   statusCode: number;
   setStatusCode: (value: number) => void;
+  responseError?: string;
+  statusCodeError?: string;
 }
 
 const OverrideFields: React.FC<OverrideFieldsProps> = ({
@@ -80,6 +91,8 @@ const OverrideFields: React.FC<OverrideFieldsProps> = ({
   setResponse,
   statusCode,
   setStatusCode,
+  responseError,
+  statusCodeError,
 }) => (
   <fieldset className="flex flex-col gap-2 rounded border p-2">
     <legend className="text-sm font-semibold">Override Response</legend>
@@ -92,6 +105,9 @@ const OverrideFields: React.FC<OverrideFieldsProps> = ({
         placeholder="Leave empty to use the original response"
         className="rounded border border-gray-300 px-2 py-1 text-black"
       />
+      {responseError && (
+        <span className="text-sm text-red-500">{responseError}</span>
+      )}
     </label>
     <label className="flex flex-col">
       <span>Status Code</span>
@@ -101,6 +117,9 @@ const OverrideFields: React.FC<OverrideFieldsProps> = ({
         onChange={(e) => setStatusCode(Number(e.target.value))}
         className="rounded border border-gray-300 px-2 py-1 text-black"
       />
+      {statusCodeError && (
+        <span className="text-sm text-red-500">{statusCodeError}</span>
+      )}
     </label>
   </fieldset>
 );
@@ -119,6 +138,13 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const [response, setResponse] = useState('');
   const [statusCode, setStatusCode] = useState(200);
   const [patternError, setPatternError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{
+    urlPattern?: string;
+    method?: string;
+    statusCode?: string;
+    response?: string;
+    delayMs?: string;
+  }>({});
 
   useEffect(() => {
     if (mode === 'edit' && existing) {
@@ -151,11 +177,48 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     }
   }, [isRegExp, urlPattern]);
 
+  const schema = z.object({
+    urlPattern: z.string().nonempty('URL Pattern is required'),
+    method: z.enum(['', 'GET', 'POST', 'PUT', 'DELETE']),
+    statusCode: z
+      .number()
+      .refine((v) => Number.isInteger(v), 'Status Code must be an integer')
+      .refine(
+        (v) => v >= 100 && v <= 599,
+        'Status Code must be between 100 and 599'
+      ),
+    response: z.string(),
+    delayMs: z.optional(z.number().refine((v) => v >= 0, 'Delay must be >= 0')),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (patternError) {
       return;
     }
+
+    const result = schema.safeParse({
+      urlPattern,
+      method,
+      statusCode,
+      response,
+      delayMs: delayMs ?? undefined,
+    });
+
+    if (!result.success) {
+      const fieldErrs: typeof errors = {};
+      result.error.errors.forEach(
+        (err: { path: (string | number)[]; message: string }) => {
+          const key = err.path[0] as keyof typeof errors;
+          fieldErrs[key] = err.message;
+        }
+      );
+      setErrors(fieldErrs);
+      return;
+    }
+
+    setErrors({});
+
     if (mode === 'add') {
       dispatch(
         addRule({
@@ -202,18 +265,23 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           patternError={patternError}
           method={method}
           setMethod={setMethod}
+          urlError={errors.urlPattern}
+          methodError={errors.method}
         />
         <OptionsFields
           enabled={enabled}
           setEnabled={setEnabled}
           delayMs={delayMs ?? null}
           setDelayMs={setDelayMs}
+          delayMsError={errors.delayMs}
         />
         <OverrideFields
           response={response}
           setResponse={setResponse}
           statusCode={statusCode}
           setStatusCode={setStatusCode}
+          responseError={errors.response}
+          statusCodeError={errors.statusCode}
         />
       </div>
       <div className="space-x-2">
