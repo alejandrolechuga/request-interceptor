@@ -11,7 +11,11 @@ const RuleExportButton: React.FC<RuleExportButtonProps> = ({
   onMessage,
 }) => {
   const handleExport = () => {
-    const blob = new Blob([JSON.stringify(rules, null, 2)], {
+    const withDelay = rules.map((r) => ({
+      ...r,
+      delayMs: r.delayMs ?? null,
+    }));
+    const blob = new Blob([JSON.stringify(withDelay, null, 2)], {
       type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
