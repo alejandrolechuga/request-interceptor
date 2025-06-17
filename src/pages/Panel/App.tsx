@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setPatched } from '../../store/settingsSlice';
 import InterceptToggleButton from '../../components/InterceptToggleButton';
@@ -14,9 +14,21 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const patched = useAppSelector((state) => state.settings.patched);
   const monkeyStatus = patched ? '🐵' : '🙈';
+  const [version, setVersion] = useState('');
+
+  useEffect(() => {
+    const manifest = chrome.runtime.getManifest();
+    if (manifest?.version) {
+      setVersion(manifest.version);
+      document.title = `HTTPMocky ${monkeyStatus} (v${manifest.version})`;
+    }
+  }, [monkeyStatus]);
   return (
     <div className="min-h-screen space-y-4 bg-zinc-800 p-4 text-white">
-      <h1 className="text-2xl font-bold">HTTPMocky {monkeyStatus}</h1>
+      <h1 className="text-2xl font-bold">
+        HTTPMocky {monkeyStatus}
+        {version && ` (v${version})`}
+      </h1>
       <InterceptToggleButton
         isEnabled={patched}
         onToggle={() => dispatch(setPatched(!patched))}
