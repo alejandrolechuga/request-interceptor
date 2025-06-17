@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.7.2
+
+### Patch Changes
+
+- f70890d: Hide bug report button when a rule form is visible.
+
 ## 1.7.1
 
 ### Patch Changes
