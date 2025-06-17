@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.9.1
+
+### Patch Changes
+
+- ad8bdb3: Remove stale match entries when a rule is deleted.
+
 ## 1.9.0
 
 ### Minor Changes

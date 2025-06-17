@@ -1,6 +1,6 @@
 {
   "name": "http-mocky",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "Chrome extension to override fetch/XHR responses",
   "license": "MIT",
   "repository": {

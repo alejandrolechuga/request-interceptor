@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "HTTPMocky",
   "description": "DevTools panel + content script that rewrites fetch/XHR responses",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "devtools_page": "devtools.html",
   "background": {
     "service_worker": "background.bundle.js"
