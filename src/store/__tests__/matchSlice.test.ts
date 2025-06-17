@@ -1,6 +1,7 @@
 import reducer, {
   incrementMatch,
   resetMatches,
+  removeMatch,
   MatchCountState,
 } from '../matchSlice';
 
@@ -15,5 +16,11 @@ describe('matchSlice', () => {
     const state: MatchCountState = { abc: 2 };
     const newState = reducer(state, resetMatches());
     expect(newState).toEqual({});
+  });
+
+  it('removes a specific match count', () => {
+    const state: MatchCountState = { abc: 2, def: 1 };
+    const newState = reducer(state, removeMatch('abc'));
+    expect(newState).toEqual({ def: 1 });
   });
 });

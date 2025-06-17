@@ -15,8 +15,11 @@ const matchSlice = createSlice({
     resetMatches() {
       return {} as MatchCountState;
     },
+    removeMatch(state, action: PayloadAction<string>) {
+      delete state[action.payload];
+    },
   },
 });
 
-export const { incrementMatch, resetMatches } = matchSlice.actions;
+export const { incrementMatch, resetMatches, removeMatch } = matchSlice.actions;
 export default matchSlice.reducer;
