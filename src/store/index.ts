@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import settingsReducer, { setPatched } from './settingsSlice';
 import rulesetReducer, { setRules } from '../Panel/ruleset/rulesetSlice';
 import matchesReducer, { incrementMatch } from './matchSlice';
+import featuresReducer from './featureSlice';
 import {
   ExtensionMessageType,
   ExtensionMessageOrigin,
@@ -19,6 +20,7 @@ export const store = configureStore({
     settings: settingsReducer,
     ruleset: rulesetReducer,
     matches: matchesReducer,
+    features: featuresReducer,
   },
 });
 
