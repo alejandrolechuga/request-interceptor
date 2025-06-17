@@ -44,24 +44,26 @@ const App: React.FC = () => {
           <RuleForm mode="add" onBack={() => setView('list')} />
         )}
       </div>
-      <button
-        type="button"
-        onClick={() =>
-          window.open('https://forms.gle/FNwNhwUvUAiRdzBo9', '_blank')
-        }
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          padding: '8px 12px',
-          backgroundColor: '#e74c3c',
-          color: '#fff',
-          borderRadius: '4px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        }}
-      >
-        Report a Bug
-      </button>
+      {view === 'list' && (
+        <button
+          type="button"
+          onClick={() =>
+            window.open('https://forms.gle/FNwNhwUvUAiRdzBo9', '_blank')
+          }
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            padding: '8px 12px',
+            backgroundColor: '#e74c3c',
+            color: '#fff',
+            borderRadius: '4px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+          }}
+        >
+          Report a Bug
+        </button>
+      )}
     </div>
   );
 };

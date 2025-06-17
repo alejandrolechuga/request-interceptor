@@ -96,4 +96,31 @@ describe('<App />', () => {
       screen.getByRole('button', { name: 'Interception Enabled' })
     ).toBeInTheDocument();
   });
+
+  it('hides the report bug button when a form is visible', () => {
+    const store = createStore();
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+
+    // report button visible in list view
+    expect(
+      screen.getByRole('button', { name: /report a bug/i })
+    ).toBeInTheDocument();
+
+    // open add form
+    fireEvent.click(screen.getByRole('button', { name: 'Add Rule' }));
+    expect(
+      screen.queryByRole('button', { name: /report a bug/i })
+    ).not.toBeInTheDocument();
+
+    // return to list and open edit form
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+    expect(
+      screen.queryByRole('button', { name: /report a bug/i })
+    ).not.toBeInTheDocument();
+  });
 });
