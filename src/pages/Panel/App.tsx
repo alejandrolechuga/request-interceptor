@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setPatched } from '../../store/settingsSlice';
+import { setFeatures } from '../../store/featureSlice';
 import InterceptToggleButton from '../../components/InterceptToggleButton';
 
 import RuleList from '../../components/RuleList';
@@ -15,6 +16,10 @@ const App: React.FC = () => {
   const patched = useAppSelector((state) => state.settings.patched);
   const monkeyStatus = patched ? '🐵' : '🙈';
   const [version, setVersion] = useState('');
+
+  useEffect(() => {
+    dispatch(setFeatures({ enableImportExport: false }));
+  }, [dispatch]);
 
   useEffect(() => {
     const manifest = chrome.runtime.getManifest();

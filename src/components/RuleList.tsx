@@ -13,6 +13,7 @@ const RuleList: React.FC<RuleListProps> = ({ onEdit, onAdd }) => {
   const [filter, setFilter] = useState('');
   const rules = useAppSelector((state) => state.ruleset);
   const rulesCount = rules.length;
+  const { enableImportExport } = useAppSelector((state) => state.features);
 
   return (
     <div className="space-y-4">
@@ -27,7 +28,7 @@ const RuleList: React.FC<RuleListProps> = ({ onEdit, onAdd }) => {
         >
           Add Rule
         </button>
-        <RuleImportExport rules={rules} />
+        {enableImportExport && <RuleImportExport rules={rules} />}
       </div>
       <RuleTable filter={filter} onEdit={onEdit} />
     </div>
