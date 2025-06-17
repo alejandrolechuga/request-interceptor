@@ -1,5 +1,16 @@
 # override-response-tool
 
+## 1.8.0
+
+### Minor Changes
+
+- 08397d6: make the form be validated with zod
+- 08397d6: Use zod for rule validation
+
+### Patch Changes
+
+- 08397d6: Switch to the official zod package and remove local shim
+
 ## 1.7.2
 
 ### Patch Changes
