@@ -103,22 +103,29 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     delayMs?: string;
   }>({});
 
+  const prevMethod = React.useRef<string>('');
+  const initialized = React.useRef(false);
   useLayoutEffect(() => {
     if (mode === 'edit' && existing) {
       setUrlPattern(existing.urlPattern);
       setIsRegExp(existing.isRegExp ?? false);
       setMethod(existing.method);
+      prevMethod.current = existing.method;
       setEnabled(existing.enabled);
       setRequestBody(existing.requestBody ?? '');
       setResponse(existing.response || '');
       setStatusCode(existing.statusCode ?? 200);
       setDelayMs(existing.delayMs ?? null);
     }
+    initialized.current = true;
   }, [existing, mode]);
 
   useEffect(() => {
-    if (!methodSupportsRequestBody(method)) {
-      setRequestBody('');
+    if (initialized.current && prevMethod.current !== method) {
+      if (!methodSupportsRequestBody(method)) {
+        setRequestBody('');
+      }
+      prevMethod.current = method;
     }
   }, [method]);
 
@@ -248,12 +255,11 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           setDelayMs={setDelayMs}
           delayMsError={errors.delayMs}
         />
-        {methodSupportsRequestBody(method) && (
-          <RequestOverrideFields
-            requestBody={requestBody}
-            setRequestBody={setRequestBody}
-          />
-        )}
+        <RequestOverrideFields
+          requestBody={requestBody}
+          setRequestBody={setRequestBody}
+          disabled={!methodSupportsRequestBody(method)}
+        />
         <ResponseOverrideFields
           response={response}
           setResponse={setResponse}
