@@ -6,6 +6,13 @@ import { removeRule, updateRule } from '../Panel/ruleset/rulesetSlice';
 import { removeMatch } from '../store/matchSlice';
 import ToggleButton from './ToggleButton';
 
+const TITLE_MAP: Record<string, string> = {
+  REQ: 'Request Body Override',
+  RES: 'Response Body Override',
+  'REQ-H': 'Request Headers Override',
+  'RES-H': 'Response Headers Override',
+};
+
 interface RuleRowProps {
   rule: Rule;
   columns: RuleColumn[];
@@ -50,6 +57,7 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
             {tags.map((t) => (
               <span
                 key={t}
+                title={TITLE_MAP[t]}
                 className="text-xs bg-neutral-700 text-white px-2 py-0.5 rounded-md font-mono"
               >
                 {t}

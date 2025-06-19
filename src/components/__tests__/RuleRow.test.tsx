@@ -100,10 +100,15 @@ describe('<RuleRow />', () => {
       responseHeaders: { Baz: 'qux' },
     };
     renderRow([overrideRule]);
-    expect(screen.getByText('REQ')).toBeInTheDocument();
-    expect(screen.getByText('RES')).toBeInTheDocument();
-    expect(screen.getByText('REQ-H')).toBeInTheDocument();
-    expect(screen.getByText('RES-H')).toBeInTheDocument();
+    const req = screen.getByText('REQ');
+    const res = screen.getByText('RES');
+    const reqH = screen.getByText('REQ-H');
+    const resH = screen.getByText('RES-H');
+
+    expect(req).toHaveAttribute('title', 'Request Body Override');
+    expect(res).toHaveAttribute('title', 'Response Body Override');
+    expect(reqH).toHaveAttribute('title', 'Request Headers Override');
+    expect(resH).toHaveAttribute('title', 'Response Headers Override');
   });
 
   it('shows dash when no overrides exist', () => {
