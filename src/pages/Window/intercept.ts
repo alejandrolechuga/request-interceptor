@@ -140,7 +140,7 @@ export const applyXhrRule = (
     rule.method.toUpperCase() === params.requestMethod.toUpperCase();
 
   if (isEnabled && hasUrlPattern && urlMatches && methodMatches) {
-    return rule.response ?? responseText;
+    return rule.response ? rule.response : responseText;
   }
   return undefined;
 };
