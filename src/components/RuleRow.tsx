@@ -31,6 +31,33 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
         );
       case RuleColumn.Method:
         return rule.method || 'Match All';
+      case RuleColumn.Overrides: {
+        const tags: string[] = [];
+        if (rule.requestBody != null) tags.push('REQ');
+        if (rule.response != null) tags.push('RES');
+        if (rule.requestHeaders && Object.keys(rule.requestHeaders).length > 0)
+          tags.push('REQ-H');
+        if (
+          rule.responseHeaders &&
+          Object.keys(rule.responseHeaders).length > 0
+        )
+          tags.push('RES-H');
+        if (tags.length === 0) {
+          return <span className="text-gray-400">&ndash;</span>;
+        }
+        return (
+          <div className="flex gap-1">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="text-xs bg-gray-200 text-gray-800 px-2 py-0.5 rounded-full font-mono"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        );
+      }
       case RuleColumn.Enabled:
         return (
           <ToggleButton
