@@ -145,7 +145,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
 
   const schema = z.object({
     urlPattern: z.string().nonempty('URL Pattern is required'),
-    method: z.enum(['', 'GET', 'POST', 'PUT', 'DELETE']),
+    method: z.enum(['', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
     requestBody: z
       .string()
       .transform((val) => (val.trim() === '' ? null : val))
