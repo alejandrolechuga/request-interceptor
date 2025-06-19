@@ -33,8 +33,8 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
         return rule.method || 'Match All';
       case RuleColumn.Overrides: {
         const tags: string[] = [];
-        if (rule.requestBody != null) tags.push('REQ');
-        if (rule.response != null) tags.push('RES');
+        if (rule.requestBody) tags.push('REQ');
+        if (rule.response) tags.push('RES');
         if (rule.requestHeaders && Object.keys(rule.requestHeaders).length > 0)
           tags.push('REQ-H');
         if (
@@ -50,7 +50,7 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
             {tags.map((t) => (
               <span
                 key={t}
-                className="text-xs bg-gray-200 text-gray-800 px-2 py-0.5 rounded-full font-mono"
+                className="text-xs bg-neutral-700 text-white px-2 py-0.5 rounded-md font-mono"
               >
                 {t}
               </span>

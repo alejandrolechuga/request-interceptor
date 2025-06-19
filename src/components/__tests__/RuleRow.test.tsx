@@ -105,4 +105,10 @@ describe('<RuleRow />', () => {
     expect(screen.getByText('REQ-H')).toBeInTheDocument();
     expect(screen.getByText('RES-H')).toBeInTheDocument();
   });
+
+  it('shows dash when no overrides exist', () => {
+    renderRow();
+    const cell = screen.getByText('–');
+    expect(cell).toBeInTheDocument();
+  });
 });
