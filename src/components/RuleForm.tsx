@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store';
 import { addRule, updateRule } from '../Panel/ruleset/rulesetSlice';
@@ -103,13 +103,13 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     delayMs?: string;
   }>({});
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (mode === 'edit' && existing) {
       setUrlPattern(existing.urlPattern);
       setIsRegExp(existing.isRegExp ?? false);
       setMethod(existing.method);
       setEnabled(existing.enabled);
-      setRequestBody(existing.requestBody || '');
+      setRequestBody(existing.requestBody ?? '');
       setResponse(existing.response || '');
       setStatusCode(existing.statusCode ?? 200);
       setDelayMs(existing.delayMs ?? null);
