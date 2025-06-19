@@ -1,5 +1,5 @@
 ---
-'request-interceptor': patch
+'http-mocky: patch
 ---
 
 Add requestBody support during rule import and export with corresponding tests.
