@@ -1,5 +1,5 @@
 ---
-"http-mocky": patch
+'http-mocky': patch
 ---
-show request body override when method unsupported
 
+show request body override when method unsupported
