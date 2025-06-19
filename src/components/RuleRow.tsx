@@ -6,6 +6,13 @@ import { removeRule, updateRule } from '../Panel/ruleset/rulesetSlice';
 import { removeMatch } from '../store/matchSlice';
 import ToggleButton from './ToggleButton';
 
+const TITLE_MAP: Record<string, string> = {
+  REQ: 'Request Body Override',
+  RES: 'Response Body Override',
+  'REQ-H': 'Request Headers Override',
+  'RES-H': 'Response Headers Override',
+};
+
 interface RuleRowProps {
   rule: Rule;
   columns: RuleColumn[];
@@ -31,6 +38,34 @@ const RuleRow: React.FC<RuleRowProps> = ({ rule, columns, onEdit }) => {
         );
       case RuleColumn.Method:
         return rule.method || 'Match All';
+      case RuleColumn.Overrides: {
+        const tags: string[] = [];
+        if (rule.requestBody) tags.push('REQ');
+        if (rule.response) tags.push('RES');
+        if (rule.requestHeaders && Object.keys(rule.requestHeaders).length > 0)
+          tags.push('REQ-H');
+        if (
+          rule.responseHeaders &&
+          Object.keys(rule.responseHeaders).length > 0
+        )
+          tags.push('RES-H');
+        if (tags.length === 0) {
+          return <span className="text-gray-400">&ndash;</span>;
+        }
+        return (
+          <div className="flex gap-1">
+            {tags.map((t) => (
+              <span
+                key={t}
+                title={TITLE_MAP[t]}
+                className="text-xs bg-neutral-700 text-white px-2 py-0.5 rounded-md font-mono"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        );
+      }
       case RuleColumn.Enabled:
         return (
           <ToggleButton

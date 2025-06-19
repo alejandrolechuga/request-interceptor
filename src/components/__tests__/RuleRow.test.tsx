@@ -90,4 +90,30 @@ describe('<RuleRow />', () => {
     const row = screen.getByRole('row');
     expect(row).toHaveTextContent('Match All');
   });
+
+  it('displays override tags when set', () => {
+    const overrideRule: Rule = {
+      ...rule,
+      requestBody: 'x',
+      response: 'y',
+      requestHeaders: { Foo: 'bar' },
+      responseHeaders: { Baz: 'qux' },
+    };
+    renderRow([overrideRule]);
+    const req = screen.getByText('REQ');
+    const res = screen.getByText('RES');
+    const reqH = screen.getByText('REQ-H');
+    const resH = screen.getByText('RES-H');
+
+    expect(req).toHaveAttribute('title', 'Request Body Override');
+    expect(res).toHaveAttribute('title', 'Response Body Override');
+    expect(reqH).toHaveAttribute('title', 'Request Headers Override');
+    expect(resH).toHaveAttribute('title', 'Response Headers Override');
+  });
+
+  it('shows dash when no overrides exist', () => {
+    renderRow();
+    const cell = screen.getByText('–');
+    expect(cell).toBeInTheDocument();
+  });
 });
