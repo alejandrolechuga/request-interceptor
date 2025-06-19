@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store';
 import { addRule, updateRule } from '../Panel/ruleset/rulesetSlice';
@@ -103,29 +103,24 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     delayMs?: string;
   }>({});
 
-  const prevMethod = React.useRef<string>('');
-  const initialized = React.useRef(false);
   useLayoutEffect(() => {
     if (mode === 'edit' && existing) {
       setUrlPattern(existing.urlPattern);
       setIsRegExp(existing.isRegExp ?? false);
       setMethod(existing.method);
-      prevMethod.current = existing.method;
       setEnabled(existing.enabled);
       setRequestBody(existing.requestBody ?? '');
       setResponse(existing.response || '');
       setStatusCode(existing.statusCode ?? 200);
       setDelayMs(existing.delayMs ?? null);
     }
-    initialized.current = true;
   }, [existing, mode]);
 
   useEffect(() => {
-    if (initialized.current && prevMethod.current !== method) {
-      if (!methodSupportsRequestBody(method)) {
-        setRequestBody('');
-      }
-      prevMethod.current = method;
+    if (method && !methodSupportsRequestBody(method)) {
+      setRequestBody('');
+    } else if (mode === 'edit' && existing) {
+      setRequestBody(existing.requestBody ?? '');
     }
   }, [method]);
 
