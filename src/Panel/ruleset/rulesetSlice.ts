@@ -9,6 +9,7 @@ type RuleUpdate = Partial<
     | 'method'
     | 'enabled'
     | 'response'
+    | 'requestBody'
     | 'statusCode'
     | 'isRegExp'
     | 'delayMs'

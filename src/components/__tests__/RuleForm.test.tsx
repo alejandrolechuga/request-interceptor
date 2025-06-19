@@ -36,9 +36,9 @@ const renderForm = (mode: 'add' | 'edit', preloadedRules: Rule[] = []) => {
 describe('<RuleForm />', () => {
   it('defaults method to empty value in add mode', () => {
     renderForm('add');
-    expect((screen.getByLabelText(/method/i) as HTMLSelectElement).value).toBe(
-      ''
-    );
+    expect(
+      (screen.getAllByLabelText(/method/i)[0] as HTMLSelectElement).value
+    ).toBe('');
   });
   it('adds a rule when submitted in add mode', () => {
     const { store } = renderForm('add');
@@ -46,7 +46,7 @@ describe('<RuleForm />', () => {
     fireEvent.change(screen.getByLabelText(/url pattern/i), {
       target: { value: 'https://example.com/*' },
     });
-    fireEvent.change(screen.getByLabelText(/method/i), {
+    fireEvent.change(screen.getAllByLabelText(/method/i)[0], {
       target: { value: 'GET' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
@@ -85,5 +85,42 @@ describe('<RuleForm />', () => {
     const added = store.getState().ruleset[0];
     expect(added.isRegExp).toBe(true);
     expect(added.urlPattern).toBe('^/api');
+  });
+
+  it('shows saved request body when editing a GET rule', async () => {
+    const rule: Rule = {
+      id: 'r1',
+      urlPattern: '/foo',
+      method: 'GET',
+      enabled: true,
+      statusCode: 200,
+      date: '',
+      response: '',
+      requestBody: '{"x":1}',
+      delayMs: null,
+    } as Rule;
+    renderForm('edit', [rule]);
+    const textarea = (await screen.findByLabelText(
+      /override request body/i
+    )) as HTMLTextAreaElement;
+    expect(textarea).toBeDisabled();
+  });
+
+  it('clears request body when method changed to GET', () => {
+    renderForm('add');
+    fireEvent.change(screen.getAllByLabelText(/method/i)[0], {
+      target: { value: 'POST' },
+    });
+    fireEvent.change(screen.getByLabelText(/override request body/i), {
+      target: { value: 'data' },
+    });
+    fireEvent.change(screen.getAllByLabelText(/method/i)[0], {
+      target: { value: 'GET' },
+    });
+    expect(
+      (screen.getByLabelText(/override request body/i) as HTMLTextAreaElement)
+        .value
+    ).toBe('');
+    expect(screen.getByLabelText(/override request body/i)).toBeDisabled();
   });
 });
