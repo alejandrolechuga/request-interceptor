@@ -10,6 +10,7 @@ jest.mock('../../../utils/globalFetch', () => {
 });
 
 const openMock = jest.fn();
+const sendMock = jest.fn();
 
 class FakeXMLHttpRequest {
   readyState = 0;
@@ -40,7 +41,8 @@ class FakeXMLHttpRequest {
     if (idx !== -1) arr.splice(idx, 1);
   }
 
-  send() {
+  send(body?: any) {
+    sendMock(body);
     this.readyState = 4;
     const handlers = this.listeners['readystatechange'] || [];
     handlers.forEach((cb) => cb.call(this));
@@ -168,5 +170,98 @@ describe('interceptXhr', () => {
     jest.advanceTimersByTime(50);
     expect(onload).toHaveBeenCalled();
     jest.useRealTimers();
+  });
+
+  it('overrides request body when requestBody is set', async () => {
+    const { interceptXhr } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/body',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+          requestBody: 'patched',
+        } as Rule,
+      ],
+    });
+    interceptXhr(state);
+    const XhrCtor =
+      globalThis.XMLHttpRequest as unknown as typeof FakeXMLHttpRequest;
+    const xhr: any = new XhrCtor();
+    xhr.open('POST', '/body');
+    xhr.send('orig');
+    expect(sendMock).toHaveBeenCalledWith('patched');
+  });
+
+  it('keeps original request body when requestBody is not set', async () => {
+    const { interceptXhr } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/body',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+        } as Rule,
+      ],
+    });
+    interceptXhr(state);
+    const XhrCtor =
+      globalThis.XMLHttpRequest as unknown as typeof FakeXMLHttpRequest;
+    const xhr: any = new XhrCtor();
+    xhr.open('POST', '/body');
+    xhr.send('orig');
+    expect(sendMock).toHaveBeenCalledWith('orig');
+  });
+
+  it('uses the first matching rule for both request and response', async () => {
+    const { interceptXhr } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/combo',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+          requestBody: 'patched',
+        } as Rule,
+        {
+          id: '2',
+          urlPattern: '/combo',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: 'override',
+          delayMs: null,
+        } as Rule,
+      ],
+    });
+    interceptXhr(state);
+    const XhrCtor =
+      globalThis.XMLHttpRequest as unknown as typeof FakeXMLHttpRequest;
+    const xhr: any = new XhrCtor();
+    xhr.open('POST', '/combo');
+    xhr.simulateResponse('text', 'orig');
+    xhr.send('orig');
+    expect(sendMock).toHaveBeenCalledWith('patched');
+    expect(xhr.responseText).toBe('orig');
   });
 });

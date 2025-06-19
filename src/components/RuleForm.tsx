@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../store';
 import { addRule, updateRule } from '../Panel/ruleset/rulesetSlice';
 import OptionsFields from './OptionsFields';
+import { methodSupportsRequestBody } from '../utils/http';
+import RequestOverrideFields from './RequestOverrideFields';
+import { ResponseOverrideFields } from './ResponseOverrideFields';
 
 interface RuleFormProps {
   mode: 'add' | 'edit';
@@ -77,53 +80,6 @@ const MatchingFields: React.FC<MatchingFieldsProps> = ({
   </fieldset>
 );
 
-interface OverrideFieldsProps {
-  response: string;
-  setResponse: (value: string) => void;
-  statusCode: number;
-  setStatusCode: (value: number) => void;
-  responseError?: string;
-  statusCodeError?: string;
-}
-
-const OverrideFields: React.FC<OverrideFieldsProps> = ({
-  response,
-  setResponse,
-  statusCode,
-  setStatusCode,
-  responseError,
-  statusCodeError,
-}) => (
-  <fieldset className="flex flex-col gap-2 rounded border p-2">
-    <legend className="text-sm font-semibold">Override Response</legend>
-    <label className="flex flex-col">
-      <span>Response Body</span>
-      <textarea
-        rows={4}
-        value={response}
-        onChange={(e) => setResponse(e.target.value)}
-        placeholder="Leave empty to use the original response"
-        className="rounded border border-gray-300 px-2 py-1 text-black"
-      />
-      {responseError && (
-        <span className="text-sm text-red-500">{responseError}</span>
-      )}
-    </label>
-    <label className="flex flex-col">
-      <span>Status Code</span>
-      <input
-        type="number"
-        value={statusCode}
-        onChange={(e) => setStatusCode(Number(e.target.value))}
-        className="rounded border border-gray-300 px-2 py-1 text-black"
-      />
-      {statusCodeError && (
-        <span className="text-sm text-red-500">{statusCodeError}</span>
-      )}
-    </label>
-  </fieldset>
-);
-
 const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const dispatch = useAppDispatch();
   const existing = useAppSelector((state) =>
@@ -135,6 +91,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const [method, setMethod] = useState('');
   const [enabled, setEnabled] = useState(true);
   const [delayMs, setDelayMs] = useState<number | null>(null);
+  const [requestBody, setRequestBody] = useState('');
   const [response, setResponse] = useState('');
   const [statusCode, setStatusCode] = useState(200);
   const [patternError, setPatternError] = useState<string | null>(null);
@@ -152,11 +109,18 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       setIsRegExp(existing.isRegExp ?? false);
       setMethod(existing.method);
       setEnabled(existing.enabled);
+      setRequestBody(existing.requestBody || '');
       setResponse(existing.response || '');
       setStatusCode(existing.statusCode ?? 200);
       setDelayMs(existing.delayMs ?? null);
     }
   }, [existing, mode]);
+
+  useEffect(() => {
+    if (!methodSupportsRequestBody(method)) {
+      setRequestBody('');
+    }
+  }, [method]);
 
   const isValidRegExp = (pattern: string): boolean => {
     try {
@@ -180,6 +144,10 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
   const schema = z.object({
     urlPattern: z.string().nonempty('URL Pattern is required'),
     method: z.enum(['', 'GET', 'POST', 'PUT', 'DELETE']),
+    requestBody: z
+      .string()
+      .transform((val) => (val.trim() === '' ? null : val))
+      .optional(),
     statusCode: z
       .number()
       .refine((v) => Number.isInteger(v), 'Status Code must be an integer')
@@ -200,10 +168,13 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
     const result = schema.safeParse({
       urlPattern,
       method,
+      requestBody,
       statusCode,
       response,
       delayMs: delayMs ?? undefined,
     });
+
+    const sanitizedRequestBody = requestBody.trim() === '' ? null : requestBody;
 
     if (!result.success) {
       const fieldErrs: typeof errors = {};
@@ -227,6 +198,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           method,
           enabled,
           date: new Date().toISOString().split('T')[0],
+          requestBody: sanitizedRequestBody,
           response,
           statusCode,
           delayMs,
@@ -241,6 +213,7 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
             isRegExp,
             method,
             enabled,
+            requestBody: sanitizedRequestBody,
             response,
             statusCode,
             delayMs,
@@ -275,7 +248,13 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
           setDelayMs={setDelayMs}
           delayMsError={errors.delayMs}
         />
-        <OverrideFields
+        {methodSupportsRequestBody(method) && (
+          <RequestOverrideFields
+            requestBody={requestBody}
+            setRequestBody={setRequestBody}
+          />
+        )}
+        <ResponseOverrideFields
           response={response}
           setResponse={setResponse}
           statusCode={statusCode}

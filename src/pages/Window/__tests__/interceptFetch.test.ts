@@ -127,4 +127,93 @@ describe('interceptFetch', () => {
     const response = await resultPromise;
     expect(await response.text()).toBe('override');
   });
+
+  it('overrides request body when requestBody is set', async () => {
+    const { interceptFetch } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/body',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+          requestBody: '{"x":1}',
+        } as Rule,
+      ],
+    });
+    interceptFetch(state);
+
+    await fetch('/body', { method: 'POST', body: 'orig' });
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: 'POST',
+      body: '{"x":1}',
+    });
+  });
+
+  it('keeps original request body when requestBody is not set', async () => {
+    const { interceptFetch } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/body',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+        } as Rule,
+      ],
+    });
+    interceptFetch(state);
+
+    await fetch('/body', { method: 'POST', body: 'orig' });
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: 'POST',
+      body: 'orig',
+    });
+  });
+
+  it('uses the first matching rule for both request and response', async () => {
+    const { interceptFetch } = await import('../intercept');
+    const state = new ExtensionReceivedState({
+      ruleset: [
+        {
+          id: '1',
+          urlPattern: '/combo',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: null,
+          delayMs: null,
+          requestBody: 'patched',
+        } as Rule,
+        {
+          id: '2',
+          urlPattern: '/combo',
+          isRegExp: false,
+          method: 'POST',
+          enabled: true,
+          statusCode: 200,
+          date: '',
+          response: 'override',
+          delayMs: null,
+        } as Rule,
+      ],
+    });
+    interceptFetch(state);
+
+    const resp = await fetch('/combo', { method: 'POST', body: 'orig' });
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ body: 'patched' });
+    expect(await resp.text()).toBe('orig');
+  });
 });

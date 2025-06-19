@@ -13,6 +13,13 @@ export const ruleSchema = z.object({
   response: z
     .union([z.string(), z.null(), z.undefined()])
     .transform((v) => v ?? null),
+  requestBody: z
+    .union([z.string(), z.null(), z.undefined()])
+    .transform((v) => {
+      if (v == null) return null;
+      return v.trim() === '' ? null : v;
+    })
+    .optional(),
   delayMs: z
     .union([z.number(), z.null(), z.undefined()])
     .transform((v) => (v === undefined ? null : v)),
@@ -31,6 +38,7 @@ export const toRule = (data: RuleInput): Rule => {
     statusCode: parsed.statusCode,
     date: parsed.date ?? new Date().toISOString().split('T')[0],
     response: parsed.response,
+    requestBody: parsed.requestBody ?? null,
     delayMs: parsed.delayMs ?? null,
   };
 };

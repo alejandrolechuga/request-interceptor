@@ -7,6 +7,7 @@ import {
 import type { Rule } from '../../types/rule';
 import { postMessage } from './contentScriptMessage';
 import { ExtensionMessageType } from '../../types/runtimeMessage';
+import { methodSupportsRequestBody } from '../../utils/http';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -38,6 +39,39 @@ const mapFetchArguments = (...args: [RequestInfo | URL, RequestInit?]) => {
     requestMethod,
     requestHeaders,
   };
+};
+
+const matchesRule = (
+  rule: Rule,
+  params: { requestUrl: string; requestMethod: string }
+) => {
+  if (!rule.enabled || !rule.urlPattern) return false;
+  let urlMatches = false;
+  if (rule.isRegExp) {
+    try {
+      urlMatches = new RegExp(rule.urlPattern).test(params.requestUrl);
+    } catch {
+      urlMatches = false;
+    }
+  } else {
+    urlMatches = params.requestUrl.includes(rule.urlPattern);
+  }
+  const methodMatches =
+    !rule.method ||
+    rule.method.toUpperCase() === params.requestMethod.toUpperCase();
+  return urlMatches && methodMatches;
+};
+
+const findMatchingRule = (
+  rules: Rule[],
+  params: { requestUrl: string; requestMethod: string }
+): Rule | undefined => {
+  for (const rule of rules) {
+    if (matchesRule(rule, params)) {
+      return rule;
+    }
+  }
+  return undefined;
 };
 
 export const applyRule = (
@@ -115,25 +149,39 @@ export const interceptFetch = (
   ExtensionReceivedState: ExtensionReceivedState
 ) => {
   setGlobalFetch(async (...args: [RequestInfo | URL, RequestInit?]) => {
+    let [input, init] = args;
     const { requestUrl, requestMethod, requestHeaders } = mapFetchArguments(
-      ...args
+      input,
+      init
     );
-    const response = await getOriginalFetch()(...args);
-    const clonedResponse = response.clone();
     const rules = ExtensionReceivedState.getState().ruleset;
-    for (const rule of rules) {
+    const matchedRule = findMatchingRule(rules, { requestUrl, requestMethod });
+    if (
+      matchedRule &&
+      matchedRule.requestBody != null &&
+      methodSupportsRequestBody(requestMethod)
+    ) {
+      if (input instanceof Request) {
+        input = new Request(input, { body: matchedRule.requestBody });
+      } else {
+        init = { ...(init || {}), body: matchedRule.requestBody };
+      }
+    }
+    const response = await getOriginalFetch()(input, init);
+    const clonedResponse = response.clone();
+    if (matchedRule) {
       const overridden = applyRule(
         { requestUrl, requestMethod, requestHeaders },
-        rule,
+        matchedRule,
         clonedResponse
       );
       if (overridden) {
-        if (rule.delayMs !== null && rule.delayMs !== undefined) {
-          await wait(Math.min(10000, rule.delayMs));
+        if (matchedRule.delayMs !== null && matchedRule.delayMs !== undefined) {
+          await wait(Math.min(10000, matchedRule.delayMs));
         }
         postMessage({
           action: ExtensionMessageType.RULE_MATCHED,
-          ruleId: rule.id,
+          ruleId: matchedRule.id,
         });
         return overridden;
       }
@@ -177,6 +225,19 @@ export const interceptXhr = (
       this.onreadystatechange = null;
       this.onload = null;
 
+      const rulesForBody = ExtensionReceivedState.getState().ruleset;
+      const matchedRule = findMatchingRule(rulesForBody, {
+        requestUrl: this._url,
+        requestMethod: this._method,
+      });
+      if (
+        matchedRule &&
+        matchedRule.requestBody != null &&
+        methodSupportsRequestBody(this._method)
+      ) {
+        body = matchedRule.requestBody;
+      }
+
       const callBuffered = () => {
         if (typeof userReady === 'function') {
           try {
@@ -203,8 +264,7 @@ export const interceptXhr = (
       const handleDone = () => {
         if (this.readyState === 4) {
           this.removeEventListener('readystatechange', handleDone);
-          const rules = ExtensionReceivedState.getState().ruleset;
-          for (const rule of rules) {
+          if (matchedRule) {
             let currentResponse = '';
             if (this.responseType === '' || this.responseType === 'text') {
               currentResponse = this.responseText;
@@ -217,7 +277,7 @@ export const interceptXhr = (
             }
             const overridden = applyXhrRule(
               { requestUrl: this._url, requestMethod: this._method },
-              rule,
+              matchedRule,
               currentResponse
             );
             if (overridden !== undefined) {
@@ -227,11 +287,12 @@ export const interceptXhr = (
               Object.defineProperty(this, 'response', { value: overridden });
               postMessage({
                 action: ExtensionMessageType.RULE_MATCHED,
-                ruleId: rule.id,
+                ruleId: matchedRule.id,
               });
               const delay =
-                rule.delayMs !== null && rule.delayMs !== undefined
-                  ? Math.min(10000, rule.delayMs)
+                matchedRule.delayMs !== null &&
+                matchedRule.delayMs !== undefined
+                  ? Math.min(10000, matchedRule.delayMs)
                   : 0;
               if (delay > 0) {
                 setTimeout(callBuffered, delay);

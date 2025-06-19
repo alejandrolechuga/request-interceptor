@@ -14,6 +14,7 @@ const RuleExportButton: React.FC<RuleExportButtonProps> = ({
     const withDelay = rules.map((r) => ({
       ...r,
       delayMs: r.delayMs ?? null,
+      requestBody: r.requestBody ?? null,
     }));
     const blob = new Blob([JSON.stringify(withDelay, null, 2)], {
       type: 'application/json',
