@@ -176,7 +176,10 @@ const RuleForm: React.FC<RuleFormProps> = ({ mode, ruleId, onBack }) => {
       delayMs: delayMs ?? undefined,
     });
 
-    const sanitizedRequestBody = requestBody.trim() === '' ? null : requestBody;
+    let sanitizedRequestBody = requestBody.trim() === '' ? null : requestBody;
+    if (['GET', 'HEAD'].includes(method)) {
+      sanitizedRequestBody = '';
+    }
 
     if (!result.success) {
       const fieldErrs: typeof errors = {};
