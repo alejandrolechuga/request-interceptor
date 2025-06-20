@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "HTTPMocky",
   "description": "DevTools panel + content script that rewrites fetch/XHR responses",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "devtools_page": "devtools.html",
   "background": {
     "service_worker": "background.bundle.js"
@@ -10,18 +10,30 @@
   "icons": {
     "128": "icon-128.png"
   },
-  "permissions": ["storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.bundle.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScript.bundle.js"
+      ],
       "run_at": "document_start",
       "world": "ISOLATED"
     },
     {
-      "matches": ["<all_urls>"],
-      "js": ["window.bundle.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "window.bundle.js"
+      ],
       "world": "MAIN",
       "run_at": "document_start"
     }

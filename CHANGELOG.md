@@ -1,5 +1,25 @@
 # override-response-tool
 
+## 1.11.0
+
+### Minor Changes
+
+- dd9f59f: Add ability to override request bodies and rename OverrideFields to ResponseOverrideFields.
+- 1918981: Add override indicator tags to the rule list table.
+- dd9f59f: Add ability to override outgoing request bodies and display request body override fields conditionally based on HTTP method.
+
+### Patch Changes
+
+- dd9f59f: Rename helper method to `methodSupportsRequestBody` and update imports.
+- dd9f59f: Add tests verifying that request body overrides are only applied when specified.
+- dd9f59f: Handle empty request body in RuleForm.
+- dd9f59f: Add requestBody support during rule import and export with corresponding tests.
+- 1918981: Update override indicator styling and logic.
+- 789e6bf: fix changeset on main pipeline
+- dd9f59f: show request body override when method unsupported
+- 1918981: Add tooltips to override tags in the rule list table.
+- 4462161: fix
+
 ## 1.10.0
 
 ### Minor Changes
