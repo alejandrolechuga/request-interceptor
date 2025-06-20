@@ -1,5 +1,11 @@
 # override-response-tool
 
+## 1.11.1
+
+### Patch Changes
+
+- 8f254b2: Clear request body when saving rules with methods that don't support a body.
+
 ## 1.11.0
 
 ### Minor Changes
