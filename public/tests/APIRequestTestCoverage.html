@@ -36,9 +36,15 @@
       downloadBtn.addEventListener('click', () => {
         const rules = apiRequestTestCases.map((test) => ({
           id: `test-${test.method}-${test.type}`.toLowerCase(),
+          urlPattern: test.url,
           method: test.method,
-          matchUrl: test.url,
-          responseBody: test.expectedResponse,
+          isRegExp: false,
+          enabled: true,
+          statusCode: 200,
+          response: JSON.stringify(test.expectedResponse),
+          requestBody: test.body ?? null,
+          delayMs: 0,
+          date: new Date().toISOString(),
         }));
         const json = JSON.stringify(rules, null, 2);
         const blob = new Blob([json], { type: 'application/json' });
