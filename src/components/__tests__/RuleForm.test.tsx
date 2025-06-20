@@ -123,4 +123,28 @@ describe('<RuleForm />', () => {
     ).toBe('');
     expect(screen.getByLabelText(/override request body/i)).toBeDisabled();
   });
+
+  it('saves empty request body for GET method', () => {
+    const rule: Rule = {
+      id: 'r2',
+      urlPattern: '/foo',
+      method: 'POST',
+      enabled: true,
+      statusCode: 200,
+      date: '',
+      response: '',
+      requestBody: 'data',
+      delayMs: null,
+    } as Rule;
+
+    const { store } = renderForm('edit', [rule]);
+
+    fireEvent.change(screen.getAllByLabelText(/method/i)[0], {
+      target: { value: 'GET' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(store.getState().ruleset[0].requestBody).toBe('');
+  });
 });
